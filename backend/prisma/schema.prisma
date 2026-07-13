@@ -1,0 +1,96 @@
+// generator client {
+//   provider = "prisma-client-js"
+// }
+
+// datasource db {
+//   provider = "postgresql"
+// }
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id           Int       @id @default(autoincrement())
+  name         String
+  email        String    @unique
+  password     String
+  role         Role      @default(CUSTOMER)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  refreshToken String?
+  account      Account[]
+  kyc          Kyc?
+}
+
+model Kyc {
+  id          Int        @id @default(autoincrement())
+  user_id     Int        @unique
+  doc_type    DOCTYPE
+  doc_no      String
+  doc_url     String
+  status      KYC_STATUS @default(PENDING)
+  submittedAt DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  user        User       @relation(fields: [user_id], references: [id])
+}
+
+model Account {
+  id                   Int           @id @default(autoincrement())
+  user_id              Int
+  acc_no               String        @unique
+  balance              Decimal       @default(0)
+  acc_type             ACCTYPE
+  user                 User          @relation(fields: [user_id], references: [id])
+  beneficiaries        Beneficiary[]
+  receivedTransactions Transaction[] @relation("Receiver")
+  sentTransactions     Transaction[] @relation("Sender")
+}
+
+model Transaction {
+  id          Int      @id @default(autoincrement())
+  sender_id   Int
+  receiver_id Int
+  amount      Decimal
+  remark      String?
+  createdAt   DateTime @default(now())
+  receiver    Account  @relation("Receiver", fields: [receiver_id], references: [id])
+  sender      Account  @relation("Sender", fields: [sender_id], references: [id])
+}
+
+model Beneficiary {
+  id           Int     @id @default(autoincrement())
+  owner_acc_id Int
+  max_limit    Decimal
+  account_no   String  @unique
+  bank_name    String
+  name         String
+  owner_acc    Account @relation(fields: [owner_acc_id], references: [id])
+}
+
+enum Role {
+  ADMIN
+  CUSTOMER
+}
+
+enum DOCTYPE {
+  Aadhaar
+  PAN
+  Passport
+}
+
+enum KYC_STATUS {
+  PENDING
+  VERIFIED
+  REJECTED
+}
+
+enum ACCTYPE {
+  SAVINGS
+  CURRENT
+}
