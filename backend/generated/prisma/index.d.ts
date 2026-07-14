@@ -2562,6 +2562,7 @@ export namespace Prisma {
     user_id: number | null
     doc_type: $Enums.DOCTYPE | null
     doc_no: string | null
+    doc_url: string | null
     status: $Enums.KYC_STATUS | null
     submittedAt: Date | null
     updatedAt: Date | null
@@ -2572,6 +2573,7 @@ export namespace Prisma {
     user_id: number | null
     doc_type: $Enums.DOCTYPE | null
     doc_no: string | null
+    doc_url: string | null
     status: $Enums.KYC_STATUS | null
     submittedAt: Date | null
     updatedAt: Date | null
@@ -2582,6 +2584,7 @@ export namespace Prisma {
     user_id: number
     doc_type: number
     doc_no: number
+    doc_url: number
     status: number
     submittedAt: number
     updatedAt: number
@@ -2604,6 +2607,7 @@ export namespace Prisma {
     user_id?: true
     doc_type?: true
     doc_no?: true
+    doc_url?: true
     status?: true
     submittedAt?: true
     updatedAt?: true
@@ -2614,6 +2618,7 @@ export namespace Prisma {
     user_id?: true
     doc_type?: true
     doc_no?: true
+    doc_url?: true
     status?: true
     submittedAt?: true
     updatedAt?: true
@@ -2624,6 +2629,7 @@ export namespace Prisma {
     user_id?: true
     doc_type?: true
     doc_no?: true
+    doc_url?: true
     status?: true
     submittedAt?: true
     updatedAt?: true
@@ -2721,6 +2727,7 @@ export namespace Prisma {
     user_id: number
     doc_type: $Enums.DOCTYPE
     doc_no: string
+    doc_url: string
     status: $Enums.KYC_STATUS
     submittedAt: Date
     updatedAt: Date
@@ -2750,6 +2757,7 @@ export namespace Prisma {
     user_id?: boolean
     doc_type?: boolean
     doc_no?: boolean
+    doc_url?: boolean
     status?: boolean
     submittedAt?: boolean
     updatedAt?: boolean
@@ -2761,6 +2769,7 @@ export namespace Prisma {
     user_id?: boolean
     doc_type?: boolean
     doc_no?: boolean
+    doc_url?: boolean
     status?: boolean
     submittedAt?: boolean
     updatedAt?: boolean
@@ -2772,6 +2781,7 @@ export namespace Prisma {
     user_id?: boolean
     doc_type?: boolean
     doc_no?: boolean
+    doc_url?: boolean
     status?: boolean
     submittedAt?: boolean
     updatedAt?: boolean
@@ -2783,12 +2793,13 @@ export namespace Prisma {
     user_id?: boolean
     doc_type?: boolean
     doc_no?: boolean
+    doc_url?: boolean
     status?: boolean
     submittedAt?: boolean
     updatedAt?: boolean
   }
 
-  export type KycOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "user_id" | "doc_type" | "doc_no" | "status" | "submittedAt" | "updatedAt", ExtArgs["result"]["kyc"]>
+  export type KycOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "user_id" | "doc_type" | "doc_no" | "doc_url" | "status" | "submittedAt" | "updatedAt", ExtArgs["result"]["kyc"]>
   export type KycInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     user?: boolean | UserDefaultArgs<ExtArgs>
   }
@@ -2809,6 +2820,7 @@ export namespace Prisma {
       user_id: number
       doc_type: $Enums.DOCTYPE
       doc_no: string
+      doc_url: string
       status: $Enums.KYC_STATUS
       submittedAt: Date
       updatedAt: Date
@@ -3240,6 +3252,7 @@ export namespace Prisma {
     readonly user_id: FieldRef<"Kyc", 'Int'>
     readonly doc_type: FieldRef<"Kyc", 'DOCTYPE'>
     readonly doc_no: FieldRef<"Kyc", 'String'>
+    readonly doc_url: FieldRef<"Kyc", 'String'>
     readonly status: FieldRef<"Kyc", 'KYC_STATUS'>
     readonly submittedAt: FieldRef<"Kyc", 'DateTime'>
     readonly updatedAt: FieldRef<"Kyc", 'DateTime'>
@@ -7134,6 +7147,7 @@ export namespace Prisma {
     user_id: 'user_id',
     doc_type: 'doc_type',
     doc_no: 'doc_no',
+    doc_url: 'doc_url',
     status: 'status',
     submittedAt: 'submittedAt',
     updatedAt: 'updatedAt'
@@ -7418,6 +7432,7 @@ export namespace Prisma {
     user_id?: IntFilter<"Kyc"> | number
     doc_type?: EnumDOCTYPEFilter<"Kyc"> | $Enums.DOCTYPE
     doc_no?: StringFilter<"Kyc"> | string
+    doc_url?: StringFilter<"Kyc"> | string
     status?: EnumKYC_STATUSFilter<"Kyc"> | $Enums.KYC_STATUS
     submittedAt?: DateTimeFilter<"Kyc"> | Date | string
     updatedAt?: DateTimeFilter<"Kyc"> | Date | string
@@ -7429,6 +7444,7 @@ export namespace Prisma {
     user_id?: SortOrder
     doc_type?: SortOrder
     doc_no?: SortOrder
+    doc_url?: SortOrder
     status?: SortOrder
     submittedAt?: SortOrder
     updatedAt?: SortOrder
@@ -7443,6 +7459,7 @@ export namespace Prisma {
     NOT?: KycWhereInput | KycWhereInput[]
     doc_type?: EnumDOCTYPEFilter<"Kyc"> | $Enums.DOCTYPE
     doc_no?: StringFilter<"Kyc"> | string
+    doc_url?: StringFilter<"Kyc"> | string
     status?: EnumKYC_STATUSFilter<"Kyc"> | $Enums.KYC_STATUS
     submittedAt?: DateTimeFilter<"Kyc"> | Date | string
     updatedAt?: DateTimeFilter<"Kyc"> | Date | string
@@ -7454,6 +7471,7 @@ export namespace Prisma {
     user_id?: SortOrder
     doc_type?: SortOrder
     doc_no?: SortOrder
+    doc_url?: SortOrder
     status?: SortOrder
     submittedAt?: SortOrder
     updatedAt?: SortOrder
@@ -7472,6 +7490,7 @@ export namespace Prisma {
     user_id?: IntWithAggregatesFilter<"Kyc"> | number
     doc_type?: EnumDOCTYPEWithAggregatesFilter<"Kyc"> | $Enums.DOCTYPE
     doc_no?: StringWithAggregatesFilter<"Kyc"> | string
+    doc_url?: StringWithAggregatesFilter<"Kyc"> | string
     status?: EnumKYC_STATUSWithAggregatesFilter<"Kyc"> | $Enums.KYC_STATUS
     submittedAt?: DateTimeWithAggregatesFilter<"Kyc"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Kyc"> | Date | string
@@ -7755,6 +7774,7 @@ export namespace Prisma {
   export type KycCreateInput = {
     doc_type: $Enums.DOCTYPE
     doc_no: string
+    doc_url: string
     status?: $Enums.KYC_STATUS
     submittedAt?: Date | string
     updatedAt?: Date | string
@@ -7766,6 +7786,7 @@ export namespace Prisma {
     user_id: number
     doc_type: $Enums.DOCTYPE
     doc_no: string
+    doc_url: string
     status?: $Enums.KYC_STATUS
     submittedAt?: Date | string
     updatedAt?: Date | string
@@ -7774,6 +7795,7 @@ export namespace Prisma {
   export type KycUpdateInput = {
     doc_type?: EnumDOCTYPEFieldUpdateOperationsInput | $Enums.DOCTYPE
     doc_no?: StringFieldUpdateOperationsInput | string
+    doc_url?: StringFieldUpdateOperationsInput | string
     status?: EnumKYC_STATUSFieldUpdateOperationsInput | $Enums.KYC_STATUS
     submittedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -7785,6 +7807,7 @@ export namespace Prisma {
     user_id?: IntFieldUpdateOperationsInput | number
     doc_type?: EnumDOCTYPEFieldUpdateOperationsInput | $Enums.DOCTYPE
     doc_no?: StringFieldUpdateOperationsInput | string
+    doc_url?: StringFieldUpdateOperationsInput | string
     status?: EnumKYC_STATUSFieldUpdateOperationsInput | $Enums.KYC_STATUS
     submittedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -7795,6 +7818,7 @@ export namespace Prisma {
     user_id: number
     doc_type: $Enums.DOCTYPE
     doc_no: string
+    doc_url: string
     status?: $Enums.KYC_STATUS
     submittedAt?: Date | string
     updatedAt?: Date | string
@@ -7803,6 +7827,7 @@ export namespace Prisma {
   export type KycUpdateManyMutationInput = {
     doc_type?: EnumDOCTYPEFieldUpdateOperationsInput | $Enums.DOCTYPE
     doc_no?: StringFieldUpdateOperationsInput | string
+    doc_url?: StringFieldUpdateOperationsInput | string
     status?: EnumKYC_STATUSFieldUpdateOperationsInput | $Enums.KYC_STATUS
     submittedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -7813,6 +7838,7 @@ export namespace Prisma {
     user_id?: IntFieldUpdateOperationsInput | number
     doc_type?: EnumDOCTYPEFieldUpdateOperationsInput | $Enums.DOCTYPE
     doc_no?: StringFieldUpdateOperationsInput | string
+    doc_url?: StringFieldUpdateOperationsInput | string
     status?: EnumKYC_STATUSFieldUpdateOperationsInput | $Enums.KYC_STATUS
     submittedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -8219,6 +8245,7 @@ export namespace Prisma {
     user_id?: SortOrder
     doc_type?: SortOrder
     doc_no?: SortOrder
+    doc_url?: SortOrder
     status?: SortOrder
     submittedAt?: SortOrder
     updatedAt?: SortOrder
@@ -8234,6 +8261,7 @@ export namespace Prisma {
     user_id?: SortOrder
     doc_type?: SortOrder
     doc_no?: SortOrder
+    doc_url?: SortOrder
     status?: SortOrder
     submittedAt?: SortOrder
     updatedAt?: SortOrder
@@ -8244,6 +8272,7 @@ export namespace Prisma {
     user_id?: SortOrder
     doc_type?: SortOrder
     doc_no?: SortOrder
+    doc_url?: SortOrder
     status?: SortOrder
     submittedAt?: SortOrder
     updatedAt?: SortOrder
@@ -9036,6 +9065,7 @@ export namespace Prisma {
   export type KycCreateWithoutUserInput = {
     doc_type: $Enums.DOCTYPE
     doc_no: string
+    doc_url: string
     status?: $Enums.KYC_STATUS
     submittedAt?: Date | string
     updatedAt?: Date | string
@@ -9045,6 +9075,7 @@ export namespace Prisma {
     id?: number
     doc_type: $Enums.DOCTYPE
     doc_no: string
+    doc_url: string
     status?: $Enums.KYC_STATUS
     submittedAt?: Date | string
     updatedAt?: Date | string
@@ -9096,6 +9127,7 @@ export namespace Prisma {
   export type KycUpdateWithoutUserInput = {
     doc_type?: EnumDOCTYPEFieldUpdateOperationsInput | $Enums.DOCTYPE
     doc_no?: StringFieldUpdateOperationsInput | string
+    doc_url?: StringFieldUpdateOperationsInput | string
     status?: EnumKYC_STATUSFieldUpdateOperationsInput | $Enums.KYC_STATUS
     submittedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -9105,6 +9137,7 @@ export namespace Prisma {
     id?: IntFieldUpdateOperationsInput | number
     doc_type?: EnumDOCTYPEFieldUpdateOperationsInput | $Enums.DOCTYPE
     doc_no?: StringFieldUpdateOperationsInput | string
+    doc_url?: StringFieldUpdateOperationsInput | string
     status?: EnumKYC_STATUSFieldUpdateOperationsInput | $Enums.KYC_STATUS
     submittedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string

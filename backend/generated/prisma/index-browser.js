@@ -136,6 +136,7 @@ exports.Prisma.KycScalarFieldEnum = {
   user_id: 'user_id',
   doc_type: 'doc_type',
   doc_no: 'doc_no',
+  doc_url: 'doc_url',
   status: 'status',
   submittedAt: 'submittedAt',
   updatedAt: 'updatedAt'

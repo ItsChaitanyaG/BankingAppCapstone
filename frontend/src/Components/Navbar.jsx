@@ -1,6 +1,11 @@
 import { Link } from "react-router-dom";
+import useAuth from "../Context/useAuth";
 
-const Navbar = () => {
+const Navbar = ({ selectedAccount, setSelectedAccount }) => {
+  const { user } = useAuth();
+
+  if (!user) return null;
+
   return (
     <>
       <div>
@@ -15,6 +20,27 @@ const Navbar = () => {
               <li>
                 <Link to="/user/kyc">KYC</Link>
               </li>
+
+              <li>
+                <details>
+                  <summary>{selectedAccount ? `${selectedAccount.acc_no}` : "No Account"}</summary>
+                  <ul className="bg-base-100 rounded-t-none p-2">
+                    {
+                      user.account?.length === 0 ? (
+                        <li>No Account</li>
+                      ) : (
+                        user.account?.map((acc) => (
+                          <li key={acc.id}>
+                            <button onClick={() => setSelectedAccount(acc)}>{acc.acc_no}</button>
+                          </li>
+                        ))
+                      )
+                    }
+
+                  </ul>
+                </details>
+              </li>
+
               <li>
                 <details>
                   <summary>User</summary>

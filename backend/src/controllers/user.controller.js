@@ -22,6 +22,15 @@ const getProfile = AsyncHandler(async (req, res) => {
           doc_no: true,
         },
       },
+      account: {
+        select: {
+          id: true,
+          acc_no: true,
+          acc_type: true,
+          balance: true,
+
+        },
+      },
     },
   });
 

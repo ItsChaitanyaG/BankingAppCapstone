@@ -1,8 +1,19 @@
 import { useState } from "react";
+import useAuth from "../../Context/useAuth";
 import { Link } from "react-router-dom";
 
+
 const Accounts = () => {
-  const [accounts, setAccounts] = useState([]);
+  const { user, loading } = useAuth();
+
+
+
+  const [accountType, setAccountType] = useState("");
+  const [openingBalance, setOpeningBalance] = useState(0);
+
+  if(loading) return <div>Loading...</div>;
+
+  if(!user.account) return null;
 
   return (
     <>
@@ -11,11 +22,39 @@ const Accounts = () => {
           <div className="flex justify-between items-center mb-8">
             <h1 className="text-3xl font-bold">My Accounts</h1>
 
-            <button className="btn btn-primary">+ Create Account</button>
+            <button className="btn btn-primary" onClick={()=>document.getElementById('my_modal_3').showModal()}>+ Create Account</button>
+
+            <dialog id="my_modal_3" className="modal">
+              <div className="modal-box">
+                <form method="dialog">
+                  {/* if there is a button in form, it will close the modal */}
+                  <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+                </form>
+                <h3 className="font-bold text-lg">Create Account</h3>
+
+                <fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4 justify-self-center">
+
+
+                  <label className="label">Account Type</label>
+                  <select defaultValue="Pick a type" className="select" value={accountType} onChange={(e) => setAccountType(e.target.value)}>
+                    <option disabled={true}>Pick a type</option>
+                    <option>SAVINGS</option>
+                    <option>CURRENT</option>
+                  </select>
+
+                  <label className="label">Opening Balance</label>
+                  <input type="number" className="input" placeholder={
+                      accountType === "SAVINGS"
+                        ? "Minimum ₹1000"
+                        : "Minimum ₹5000"
+                    } min={accountType === "SAVINGS"? 1000 : 5000} value={openingBalance} onChange={(e) => setOpeningBalance(e.target.value)}/>
+                </fieldset>
+              </div>
+            </dialog>
           </div>
 
           <div className="grid gap-6">
-            {accounts.map((account) => (
+            {user.account?.map((account) => (
               <div key={account.id} className="card bg-base-100 shadow-xl">
                 <div className="card-body">
                   <div className="flex justify-between items-center">

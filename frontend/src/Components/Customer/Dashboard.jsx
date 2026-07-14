@@ -1,17 +1,20 @@
 
-import { Link } from "react-router-dom";
+import { Link, useOutletContext } from "react-router-dom";
 import useAuth from "../../Context/useAuth.js";
 
 const Dashboard = () => {
-  const {user, loading} = useAuth
+  const { user, loading } = useAuth();
+  const { selectedAccount } = useOutletContext();
 
   if (loading) {
     return <div>Loading...</div>;
   }
 
-  if (!user) {
+  if (!user ) {
     return <div>Something went wrong.</div>
   }
+
+  const hasAccounts = user.account?.length > 0;
 
   return (
     <>
@@ -26,25 +29,25 @@ const Dashboard = () => {
           <div className="stats stats-vertical lg:stats-horizontal shadow">
             <div className="stat">
               <div className="stat-title">Account Number</div>
-              <div className="stat-value">xxxx-xxxx-xxxx</div>
+              <div className="stat-value">{hasAccounts? selectedAccount.acc_no : "-"}</div>
               <div className="stat-desc"></div>
             </div>
 
             <div className="stat">
               <div className="stat-title">Balance</div>
-              <div className="stat-value">$4,200.00</div>
+              <div className="stat-value">{hasAccounts ? selectedAccount.balance : "-"}</div>
               <div className="stat-desc"></div>
             </div>
 
             <div className="stat">
               <div className="stat-title">KYC Status</div>
-              <div className="stat-value">Completed</div>
+              <div className="stat-value">{user.kyc?.status ?? "Not Submitted"}</div>
               <div className="stat-desc"></div>
             </div>
 
             <div className="stat">
               <div className="stat-title">Beneficiaries</div>
-              <div className="stat-value">2</div>
+              <div className="stat-value">{hasAccounts ? selectedAccount.beneficiaries.length : "-"}</div>
               <div className="stat-desc"></div>
             </div>
           </div>

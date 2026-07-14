@@ -33,6 +33,7 @@ model Kyc {
   user_id     Int        @unique
   doc_type    DOCTYPE
   doc_no      String
+  doc_url     String
   status      KYC_STATUS @default(PENDING)
   submittedAt DateTime   @default(now())
   updatedAt   DateTime   @updatedAt

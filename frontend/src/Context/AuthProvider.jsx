@@ -5,9 +5,9 @@ import { useEffect } from "react";
 import AuthContext from "./AuthContext.js";
 import { useCallback } from "react";
 
-const AuthProvider = ({ childern }) => {
-  const { user, setUser } = useState(null);
-  const { loading, setLoading } = useState(true);
+const AuthProvider = ({ children }) => {
+  const [ user, setUser ] = useState(null);
+  const [ loading, setLoading ] = useState(true);
 
   const refreshUser = useCallback(async () => {
     try {
@@ -30,7 +30,7 @@ const AuthProvider = ({ childern }) => {
 
   return (
     <AuthContext.Provider value={{ user, setUser, loading, refreshUser }}>
-      {childern}
+      {children}
     </AuthContext.Provider>
   )
 }
