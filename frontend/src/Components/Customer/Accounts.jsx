@@ -2,18 +2,45 @@ import { useState } from "react";
 import useAuth from "../../Context/useAuth";
 import { Link } from "react-router-dom";
 
+import api from "../../api/axios.js";
+
 
 const Accounts = () => {
-  const { user, loading } = useAuth();
-
-
+  const { user, loading, refreshUser } = useAuth();
 
   const [accountType, setAccountType] = useState("");
   const [openingBalance, setOpeningBalance] = useState(0);
 
   if(loading) return <div>Loading...</div>;
 
-  if(!user.account) return null;
+  if (!user.account) return null;
+
+  const createAccount = async () => {
+    if (!user.kyc) {
+      alert("Please complete your KYC first");
+      return;
+    }
+
+    if (user.kyc === "PENDING" || user.kyc === "REJECTED") {
+      alert("Your KYC is pending or rejected");
+      return;
+    }
+
+    if (!accountType || Number(openingBalance) <= 0) {
+      alert("Account type and opening balance are required");
+      return;
+    }
+
+    try {
+      await api.post("/user/account/addAccount", { accountType, openingBalance: Number(openingBalance) })
+
+      await refreshUser();
+      alert("Account created successfully");
+
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <>
@@ -36,7 +63,7 @@ const Accounts = () => {
 
 
                   <label className="label">Account Type</label>
-                  <select defaultValue="Pick a type" className="select" value={accountType} onChange={(e) => setAccountType(e.target.value)}>
+                  <select className="select" value={accountType} onChange={(e) => setAccountType(e.target.value)}>
                     <option disabled={true}>Pick a type</option>
                     <option>SAVINGS</option>
                     <option>CURRENT</option>
@@ -47,7 +74,9 @@ const Accounts = () => {
                       accountType === "SAVINGS"
                         ? "Minimum ₹1000"
                         : "Minimum ₹5000"
-                    } min={accountType === "SAVINGS"? 1000 : 5000} value={openingBalance} onChange={(e) => setOpeningBalance(e.target.value)}/>
+                    } min={accountType === "SAVINGS" ? 1000 : 5000} value={openingBalance} onChange={(e) => setOpeningBalance(e.target.value)} />
+
+                  <button className="btn btn-primary" onClick={createAccount}>Create Account</button>
                 </fieldset>
               </div>
             </dialog>

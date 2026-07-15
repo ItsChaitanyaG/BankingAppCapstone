@@ -28,9 +28,11 @@ const getProfile = AsyncHandler(async (req, res) => {
           acc_no: true,
           acc_type: true,
           balance: true,
+          beneficiaries: true,
 
         },
       },
+
     },
   });
 
@@ -151,6 +153,18 @@ const addAccount = AsyncHandler(async (req, res) => {
 });
 
 //beneficiaries
+const getBeneficiaries = AsyncHandler(async (req, res) => {
+  const { accountId } = req.params;
+  const beneficiaries = await prisma.beneficiary.findMany({
+    where: {
+      owner_acc: Number(accountId),
+    }
+  })
+
+  return res.status(200)
+    .json( new ApiResponse(200, beneficiaries, "Beneficiaries fetched successfully"))
+});
+
 const addBeneficiary = AsyncHandler(async (req, res) => {
   const { name, bank_name, account_no, max_limit } = req.body;
   const { accountId } = req.params;

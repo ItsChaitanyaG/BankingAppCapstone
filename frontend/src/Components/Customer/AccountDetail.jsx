@@ -1,7 +1,14 @@
-import { useState } from "react";
+
+import { useParams } from "react-router-dom";
+import useAuth from "../../Context/useAuth";
 
 const AccountDetail = () => {
-  const [account, setAccount] = useState();
+  const { id } = useParams();
+  const { user} = useAuth();
+  const account = user?.account?.find((acc) => acc.id === Number(id));
+  const beneficiaries = account?.beneficiaries || [];
+
+  if (!account) return <div>Account not found</div>;
 
   return (
     <>
@@ -10,15 +17,6 @@ const AccountDetail = () => {
           {/* Header */}
           <div className="flex justify-between items-center mb-6">
             <h1 className="text-3xl font-bold">Account Details</h1>
-
-            <button
-              className="btn btn-primary"
-              onClick={() =>
-                document.getElementById("beneficiary_modal").showModal()
-              }
-            >
-              + Add Beneficiary
-            </button>
           </div>
 
           {/* Account Card */}
@@ -27,17 +25,17 @@ const AccountDetail = () => {
               <div className="grid md:grid-cols-3 gap-6">
                 <div>
                   <p className="text-sm text-gray-500">Account Number</p>
-                  <h2 className="text-xl font-semibold">104567891234</h2>
+                  <h2 className="text-xl font-semibold">{account.acc_no}</h2>
                 </div>
 
                 <div>
                   <p className="text-sm text-gray-500">Account Type</p>
-                  <h2 className="text-xl font-semibold">Savings</h2>
+                  <h2 className="text-xl font-semibold">{account.acc_type}</h2>
                 </div>
 
                 <div>
                   <p className="text-sm text-gray-500">Available Balance</p>
-                  <h2 className="text-3xl font-bold text-success">₹1,25,430</h2>
+                  <h2 className="text-3xl font-bold text-success">{account.balance.toLocaleString()}</h2>
                 </div>
               </div>
             </div>
@@ -63,9 +61,9 @@ const AccountDetail = () => {
                     {beneficiaries.map((beneficiary) => (
                       <tr key={beneficiary.id}>
                         <td>{beneficiary.name}</td>
-                        <td>{beneficiary.bank}</td>
-                        <td>{beneficiary.accountNo}</td>
-                        <td>₹{beneficiary.limit.toLocaleString()}</td>
+                        <td>{beneficiary.bank_name}</td>
+                        <td>{beneficiary.account_no}</td>
+                        <td>₹{beneficiary.max_limit.toLocaleString()}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -73,48 +71,6 @@ const AccountDetail = () => {
               </div>
             </div>
           </div>
-
-          {/* Modal */}
-
-          <dialog id="beneficiary_modal" className="modal">
-            <div className="modal-box">
-              <h3 className="font-bold text-xl mb-5">Add Beneficiary</h3>
-
-              <div className="space-y-4">
-                <input
-                  type="text"
-                  placeholder="Beneficiary Name"
-                  className="input input-bordered w-full"
-                />
-
-                <input
-                  type="text"
-                  placeholder="Bank Name"
-                  className="input input-bordered w-full"
-                />
-
-                <input
-                  type="text"
-                  placeholder="Account Number"
-                  className="input input-bordered w-full"
-                />
-
-                <input
-                  type="number"
-                  placeholder="Maximum Transfer Limit"
-                  className="input input-bordered w-full"
-                />
-              </div>
-
-              <div className="modal-action">
-                <button className="btn btn-primary">Add Beneficiary</button>
-
-                <form method="dialog">
-                  <button className="btn">Close</button>
-                </form>
-              </div>
-            </div>
-          </dialog>
         </div>
       </div>
     </>
