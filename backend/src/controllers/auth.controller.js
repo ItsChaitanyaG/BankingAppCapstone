@@ -12,16 +12,12 @@ import {
 const generateRefreshAccessToken = async (user) => {
   try {
     const userId = user.id;
-    console.log("Got user ID", userId);
 
     const accessToken = generateAccessToken(user);
-    console.log("Got access Token", accessToken);
 
     const refreshToken = generateRefreshToken(user);
-    console.log("Got refresh Token", refreshToken);
 
     await prisma.user.update({ where: { id: userId }, data: { refreshToken } });
-    console.log("User updated");
 
     return { accessToken, refreshToken };
   } catch (error) {

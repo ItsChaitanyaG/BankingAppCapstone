@@ -1,6 +1,20 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import api from "../../api/axios";
 
 const AdminNavbar = () => {
+
+  const navigate = useNavigate();
+
+  const logout = async () => {
+    try {
+      await api.post("/auth/logout");
+    } catch (error) {
+      console.error(error);
+    } finally {
+      navigate("/login");
+    }
+  };
+
   return (
     <>
       <div className="navbar bg-base-100 shadow-sm justify-between">
@@ -25,7 +39,7 @@ const AdminNavbar = () => {
                     <Link to="/admin/transactions">Transactions</Link>
                   </li>
                   <li>
-                    <a>Logout</a>
+                    <button onClick={logout}>Logout</button>
                   </li>
                 </ul>
               </details>

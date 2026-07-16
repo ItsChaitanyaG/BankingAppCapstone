@@ -1,10 +1,22 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import useAuth from "../Context/useAuth";
+import api from "../api/axios";
 
 const Navbar = ({ selectedAccount, setSelectedAccount }) => {
   const { user } = useAuth();
+  const navigate = useNavigate();
 
   if (!user) return null;
+
+  const logout = async () => {
+    try {
+      await api.post("/auth/logout");
+    } catch (error) {
+      console.error(error);
+    } finally {
+      navigate("/login");
+    }
+  };
 
   return (
     <>
@@ -60,7 +72,7 @@ const Navbar = ({ selectedAccount, setSelectedAccount }) => {
                       <Link to="/user/accounts">Accounts</Link>
                     </li>
                     <li>
-                      <a>Logout</a>
+                      <button onClick={logout}>Logout</button>
                     </li>
                   </ul>
                 </details>

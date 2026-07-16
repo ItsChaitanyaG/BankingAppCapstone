@@ -1,4 +1,52 @@
+import { useEffect } from "react";
+import { useState } from "react";
+import { useOutletContext } from "react-router-dom";
+import api from "../../api/axios";
+
 const Beneficiaries = () => {
+
+  const { selectedAccount } = useOutletContext();
+  const [beneficiaries, setBeneficiaries] = useState([]);
+
+  const [name, setName] = useState("");
+  const [bankName, setBankName] = useState("");
+  const [accountNumber, setAccountNumber] = useState("");
+  const [maxLimit, setMaxLimit] = useState("");
+
+  const getBeneficiaries = async () => {
+    if (!selectedAccount) {
+      setBeneficiaries([]);
+      return;
+    }
+
+    try {
+      const res = await api.get(`/user/beneficiaries/${selectedAccount.id}`);
+      setBeneficiaries(res.data.data);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  const addBeneficiary = async () => {
+    try {
+      await api.post(`/user/beneficiaries/${selectedAccount.id}`, { name, bankName, accountNumber, maxLimit });
+
+      await getBeneficiaries();
+
+      setName("");
+      setBankName("");
+      setAccountNumber("");
+      setMaxLimit("");
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  useEffect(() => {
+    getBeneficiaries();
+  }, [selectedAccount])
+
+
   return (
     <>
       <div className="m-15">
@@ -19,27 +67,14 @@ const Beneficiaries = () => {
                   </tr>
                 </thead>
                 <tbody>
-                  {/* row 1 */}
-                  <tr>
-                    <th>1</th>
-                    <td>2023-05-15</td>
-                    <td>Cy Ganderton</td>
-                    <td>Success</td>
-                  </tr>
-                  {/* row 2 */}
-                  <tr>
-                    <th>2</th>
-                    <td>2023-05-14</td>
-                    <td>Hart Hagerty</td>
-                    <td>Failed</td>
-                  </tr>
-                  {/* row 3 */}
-                  <tr>
-                    <th>3</th>
-                    <td>2023-05-13</td>
-                    <td>Brice Swyre</td>
-                    <td>Success</td>
-                  </tr>
+                  {beneficiaries.map((b) => (
+                    <tr key={b.id}>
+                      <th>{b.id}</th>
+                      <td>{b.account_no}</td>
+                      <td>{b.name}</td>
+                      <td>{b.max_limit}</td>
+                    </tr>
+                  ))}
                 </tbody>
               </table>
             </div>
@@ -57,11 +92,20 @@ const Beneficiaries = () => {
           <div className="modal-box">
             <h3 className="font-bold text-lg">Add Beneficiary</h3>
             <fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4 m-5 justify-self-center">
+
+              <label className="label">Name</label>
+              <input type="text"  className="input" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} />
+
+              <label className="label">Bank Name</label>
+              <input type="text" className="input" placeholder="Name" value={bankName} onChange={(e) => setBankName(e.target.value)} />
+
               <label className="label">Account Number</label>
               <input
                 type="number"
                 className="input"
                 placeholder="Account Number"
+                value={accountNumber}
+                onChange={(e) => setAccountNumber(e.target.value)}
               />
 
               <label className="label">Max Transfer Limit</label>
@@ -69,9 +113,11 @@ const Beneficiaries = () => {
                 type="number"
                 className="input"
                 placeholder="Max Transfer Limit"
+                value={maxLimit}
+                onChange={(e) => setMaxLimit(e.target.value)}
               />
 
-              <button className="btn btn-neutral mt-4">Add</button>
+              <button className="btn btn-neutral mt-4" onClick={addBeneficiary}>Add</button>
             </fieldset>
             <div className="modal-action flex justify-center">
               <form method="dialog">

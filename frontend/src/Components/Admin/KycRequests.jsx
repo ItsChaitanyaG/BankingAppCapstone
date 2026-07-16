@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 
 const KycRequests = () => {
-  const [kyc, setKyc] = useState();
+  const [kyc, setKyc] = useState([]);
 
   useEffect(() => {
     const getAllKyc = async () => {

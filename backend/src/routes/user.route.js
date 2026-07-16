@@ -4,6 +4,8 @@ import {
   addAccount,
   getProfile,
   kycRequest,
+  getBeneficiaries,
+  addBeneficiary
 } from "../controllers/user.controller.js";
 import { verifyKyc } from "../controllers/admin.controller.js";
 import { upload } from "../middlewares/multer.middleware.js";
@@ -24,5 +26,9 @@ router
 
 //account
 router.route("/account/addAccount").post(verifyJWT, verifyKyc, addAccount);
+
+//beneficiaries
+router.route("/beneficiaries/:accountId").get(verifyJWT, getBeneficiaries);
+router.route("/beneficiaries/:accountId").post(verifyJWT, verifyKyc, addBeneficiary);
 
 export default router;

@@ -20,6 +20,8 @@ const getProfile = AsyncHandler(async (req, res) => {
           doc_url: true,
           doc_type: true,
           doc_no: true,
+          submittedAt: true,
+          updatedAt: true,
         },
       },
       account: {
@@ -155,6 +157,18 @@ const addAccount = AsyncHandler(async (req, res) => {
 //beneficiaries
 const getBeneficiaries = AsyncHandler(async (req, res) => {
   const { accountId } = req.params;
+
+  const account = await prisma.account.findFirst({
+    where: {
+      id: Number(accountId),
+      user_id: req.user.id,
+    }
+  })
+
+  if (!account) {
+    throw new ApiError(403, "Unauthorized access");
+  }
+
   const beneficiaries = await prisma.beneficiary.findMany({
     where: {
       owner_acc: Number(accountId),
@@ -219,4 +233,4 @@ const addBeneficiary = AsyncHandler(async (req, res) => {
     );
 });
 
-export { getProfile, kycRequest, addAccount, addBeneficiary };
+export { getProfile, kycRequest, addAccount, getBeneficiaries,addBeneficiary };
