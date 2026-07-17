@@ -7652,16 +7652,17 @@ export namespace Prisma {
 
   export type BeneficiaryWhereUniqueInput = Prisma.AtLeast<{
     id?: number
-    account_no?: string
+    owner_acc_id_account_no?: BeneficiaryOwner_acc_idAccount_noCompoundUniqueInput
     AND?: BeneficiaryWhereInput | BeneficiaryWhereInput[]
     OR?: BeneficiaryWhereInput[]
     NOT?: BeneficiaryWhereInput | BeneficiaryWhereInput[]
     owner_acc_id?: IntFilter<"Beneficiary"> | number
     max_limit?: DecimalFilter<"Beneficiary"> | Decimal | DecimalJsLike | number | string
+    account_no?: StringFilter<"Beneficiary"> | string
     bank_name?: StringFilter<"Beneficiary"> | string
     name?: StringFilter<"Beneficiary"> | string
     owner_acc?: XOR<AccountScalarRelationFilter, AccountWhereInput>
-  }, "id" | "account_no">
+  }, "id" | "owner_acc_id_account_no">
 
   export type BeneficiaryOrderByWithAggregationInput = {
     id?: SortOrder
@@ -8447,6 +8448,11 @@ export namespace Prisma {
     sender_id?: SortOrder
     receiver_id?: SortOrder
     amount?: SortOrder
+  }
+
+  export type BeneficiaryOwner_acc_idAccount_noCompoundUniqueInput = {
+    owner_acc_id: number
+    account_no: string
   }
 
   export type BeneficiaryCountOrderByAggregateInput = {

@@ -67,10 +67,12 @@ model Beneficiary {
   id           Int     @id @default(autoincrement())
   owner_acc_id Int
   max_limit    Decimal
-  account_no   String  @unique
+  account_no   String
   bank_name    String
   name         String
   owner_acc    Account @relation(fields: [owner_acc_id], references: [id])
+
+  @@unique([owner_acc_id, account_no])
 }
 
 enum Role {

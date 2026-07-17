@@ -233,4 +233,63 @@ const addBeneficiary = AsyncHandler(async (req, res) => {
     );
 });
 
+//Transactions
+
+const transfer = async (senderAccId, beneficiary, accountNo, amount, remark) => {
+
+};
+
+const transferMoney = AsyncHandler(async (req, res) => {
+
+  const { senderAccId, accountNo, amount, remark } = req.body;
+
+  const sender = await prisma.account.findFirst({
+    where: {
+      id: senderAccId,
+      user_id: req.user.id,
+    }
+  })
+
+  if (!sender) {
+    throw new ApiError(403, "Unauthorized Request");
+  }
+
+  if (accountNo === "" || amount <= 0) {
+    throw new ApiError(400, "Invalid amount or account number");
+  }
+
+  const balance = sender.balance;
+
+  if (Number(balance) < Number(amount)) {
+    throw new ApiError(400, "Insufficient balance");
+  }
+
+  const beneficiary = await prisma.beneficiary.findFirst({
+    where: {
+      account_no: accountNo,
+      owner_acc_id: sender.id,
+    }
+  })
+
+  if (beneficiary) {
+    if(Number(amount) > Number(beneficiary.max_limit)) {
+      throw new ApiError(400, "Amount exceeds beneficiary's max limit");
+    }
+  }
+
+  const receiver = await prisma.account.findUnique({
+    where: {
+      acc_no: accountNo,
+    }
+  })
+
+  if(!receiver) {
+    throw new ApiError(404, "Receiver account not found");
+  }
+
+  if(receiver.id === sender.id) {
+    throw new ApiError(400, "Cannot transfer to the same account");
+  }
+})
+
 export { getProfile, kycRequest, addAccount, getBeneficiaries,addBeneficiary };

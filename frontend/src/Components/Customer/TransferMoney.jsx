@@ -11,12 +11,12 @@ const TransferMoney = () => {
 
               <legend className="fieldset-legend">Beneficiary</legend>
               <select defaultValue="Pick a browser" className="select">
-                <option disabled={true}>Pick from Beneficiaries</option>
+                <option>None</option>
                 <option>Beneficiary 1</option>
                 <option>Beneficiary 2</option>
                 <option>Beneficiary 3</option>
               </select>
-              <span className="label">Optional</span>
+              <span className="label">OR</span>
 
               <label className="label">Account Number</label>
               <input
