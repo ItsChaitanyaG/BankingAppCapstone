@@ -105,6 +105,72 @@ const rejectKyc = AsyncHandler(async (req, res) => {
     .json(new ApiResponse(200, kyc, "KYC rejected successfully"));
 });
 
+const getTransactions = AsyncHandler(async (req, res) => {
+  const transactions = await prisma.transaction.findMany({
+    include: {
+      sender: {
+        select: {
+          id: true,
+          acc_no: true,
+         },
+      },
+      receiver: {
+        select: {
+          id: true,
+          acc_no: true,
+        },
+      },
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, transactions, "Transactions fetched successfully"));
+});
+
+const getTransactionDetails = AsyncHandler(async (req, res) => {
+  const transaction = await prisma.transaction.findUnique({
+    where: { id: Number(req.params.id) },
+    include: {
+      sender: {
+        select: {
+          acc_no: true,
+          user: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+            },
+          },
+        },
+      },
+      receiver: {
+        select: {
+          acc_no: true,
+          user: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+            },
+          },
+        },
+      },
+    },
+  });
+
+  if (!transaction) {
+    throw new ApiError(404, "Transaction not found");
+  }
+
+  return res
+    .status(200)
+    .json(new ApiResponse(200, transaction, "Transaction details fetched successfully"));
+});
+
 export {
   getAllCustomers,
   getCustomer,
@@ -112,4 +178,6 @@ export {
   getKyc,
   verifyKyc,
   rejectKyc,
+  getTransactions,
+  getTransactionDetails,
 };

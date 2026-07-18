@@ -22,4 +22,9 @@ router.route("/kyc/:id").get(verifyJWT, verifyAdmin, getKyc);
 router.route("/kyc/:id/verify").patch(verifyJWT, verifyAdmin, verifyKyc);
 router.route("/kyc/:id/reject").patch(verifyJWT, verifyAdmin, rejectKyc);
 
+//transactions
+router.route("/transactions").get(verifyJWT, verifyAdmin, getTransactions);
+router.route("/transactions/:id").get(verifyJWT, verifyAdmin, getTransactionDetails);
+
+
 export default router;

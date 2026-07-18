@@ -235,17 +235,59 @@ const addBeneficiary = AsyncHandler(async (req, res) => {
 
 //Transactions
 
-const transfer = async (senderAccId, beneficiary, accountNo, amount, remark) => {
+const transfer = async (sender, receiver, amount, remark) => {
+  const transferAmount = Number(amount);
+
+  try {
+    await prisma.$transaction(async (tx) => {
+      //debit sender
+      await tx.account.update({
+        where: {
+          id: sender.id,
+        },
+        data: {
+          balance: {
+            decrement: transferAmount,
+          }
+        }
+      })
+
+      //credit receiver
+      await tx.account.update({
+        where: {
+          id: receiver.id,
+        },
+        data: {
+          balance: {
+            increment: transferAmount,
+          }
+        }
+      })
+
+      //create transaction record
+      await tx.transaction.create({
+        data: {
+          sender_id: sender.id,
+          receiver_id: receiver.id,
+          amount: transferAmount,
+          remark,
+        }
+      })
+    });
+  } catch (error) {
+    throw new ApiError(500, "Transaction failed", error);
+  }
 
 };
 
 const transferMoney = AsyncHandler(async (req, res) => {
 
-  const { senderAccId, accountNo, amount, remark } = req.body;
+  const { senderAccId } = req.params;
+  const { accountNo, amount, remark } = req.body;
 
   const sender = await prisma.account.findFirst({
     where: {
-      id: senderAccId,
+      id: Number(senderAccId),
       user_id: req.user.id,
     }
   })
@@ -254,7 +296,7 @@ const transferMoney = AsyncHandler(async (req, res) => {
     throw new ApiError(403, "Unauthorized Request");
   }
 
-  if (accountNo === "" || amount <= 0) {
+  if (!accountNo || Number(amount) <= 0) {
     throw new ApiError(400, "Invalid amount or account number");
   }
 
@@ -290,6 +332,57 @@ const transferMoney = AsyncHandler(async (req, res) => {
   if(receiver.id === sender.id) {
     throw new ApiError(400, "Cannot transfer to the same account");
   }
+
+  await transfer(sender, receiver, amount, remark);
+
+  return res.status(200)
+    .json(new ApiResponse(200, null, "Transfer successful"))
 })
 
-export { getProfile, kycRequest, addAccount, getBeneficiaries,addBeneficiary };
+const transactionHistory = AsyncHandler(async (req, res) => {
+  const { accountId } = req.params;
+
+  const account = await prisma.account.findFirst({
+    where: {
+      id: Number(accountId),
+      user_id: req.user.id,
+    }
+  })
+
+  if (!account) {
+    throw new ApiError(403, "Unauthorized Request");
+  }
+
+  const transactions = await prisma.transaction.findMany({
+    where: {
+      OR: [
+        { sender_id: Number(accountId) },
+        { receiver_id: Number(accountId) },
+      ],
+    },
+    include: {
+      sender: {
+        select: {
+          acc_no: true,
+        },
+      },
+      receiver: {
+        select: {
+          acc_no: true,
+        },
+      },
+    },
+    orderBy: {
+      createdAt: "desc",
+    },
+  })
+
+  if (!transactions) {
+    throw new ApiError(404, "No transactions found");
+  }
+
+  return res.status(200)
+    .json(new ApiResponse(200, transactions, "Transactions fetched successfully"));
+})
+
+export { getProfile, kycRequest, addAccount, getBeneficiaries, addBeneficiary, transferMoney, transactionHistory };
