@@ -1,4 +1,34 @@
+import { useEffect } from "react";
+import { useState } from "react";
+import { useOutletContext } from "react-router-dom";
+import api from "../../api/axios";
+
 const TransactionHistory = () => {
+
+  const [transactions, setTransactions] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const { selectedAccount } = useOutletContext();
+
+  useEffect(() => {
+    const getTransactions = async () => {
+      try {
+        const res = await api.get(`/${selectedAccount.id}/transactions`);
+        setTransactions(res.data.data);
+
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    getTransactions();
+
+    if (!selectedAccount) return <div>Please select an account</div>;
+  }, [selectedAccount])
+
+  if (loading) return <div>Loading...</div>;
+
   return (
     <>
       <div>
@@ -31,36 +61,20 @@ const TransactionHistory = () => {
                 <tr>
                   <th></th>
                   <th>Date</th>
-                  <th>To</th>
-                  <th>Status</th>
+                  <th>Counterparty</th>
                   <th>Amount</th>
                 </tr>
               </thead>
               <tbody>
-                {/* row 1 */}
-                <tr>
-                  <th>1</th>
-                  <td>2023-05-15</td>
-                  <td>Cy Ganderton</td>
-                  <td>Success</td>
-                  <td>$100</td>
-                </tr>
-                {/* row 2 */}
-                <tr>
-                  <th>2</th>
-                  <td>2023-05-14</td>
-                  <td>Hart Hagerty</td>
-                  <td>Failed</td>
-                  <td>$50</td>
-                </tr>
-                {/* row 3 */}
-                <tr>
-                  <th>3</th>
-                  <td>2023-05-13</td>
-                  <td>Brice Swyre</td>
-                  <td>Success</td>
-                  <td>$100</td>
-                </tr>
+                {transactions.map((t) => (
+
+                  <tr key={t.id}>
+                    <th>{ t.id }</th>
+                    <td>{new Date(t.createdAt).toLocaleString()}</td>
+                    <td>{t.receiver.acc_no}</td>
+                    <td>{t.amount}</td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>

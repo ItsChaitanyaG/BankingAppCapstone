@@ -1,4 +1,48 @@
+import { useState } from "react";
+import api from "../../api/axios.js";
+import { useOutletContext } from "react-router-dom";
+import useAuth from "../../Context/useAuth.js";
+
 const TransferMoney = () => {
+
+  const { refreshUser } = useAuth();
+
+  const [beneficiary, setBeneficiary] = useState("");
+  const [accountNumber, setAccountNumber] = useState("");
+  const [amount, setAmount] = useState("");
+  const [remark, setRemark] = useState("");
+  const { selectedAccount } = useOutletContext();
+
+  if (!selectedAccount) {
+      return <div>Please select an account.</div>;
+  }
+
+  const beneficiaries = selectedAccount.beneficiaries || [];
+
+  const transfer = async() => {
+    if (!accountNumber || !amount) {
+      alert("Please fill in all fields");
+      return;
+    }
+
+    try {
+      await api.post(`/${selectedAccount.id}/transfer`, {
+        accountNumber,
+        amount,
+        remark,
+      });
+
+      await refreshUser();
+
+      setBeneficiary("");
+      setAccountNumber("");
+      setAmount("");
+      setRemark("");
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <>
       <div className="m-20">
@@ -10,11 +54,12 @@ const TransferMoney = () => {
               <legend className="fieldset-legend"></legend>
 
               <legend className="fieldset-legend">Beneficiary</legend>
-              <select defaultValue="Pick a browser" className="select">
-                <option>None</option>
-                <option>Beneficiary 1</option>
-                <option>Beneficiary 2</option>
-                <option>Beneficiary 3</option>
+              <select value={beneficiary} onChange={(e) => { setBeneficiary(e.target.value); setAccountNumber(e.target.value); }} className="select">
+                <option value="">None</option>
+                {beneficiaries.map((b) => (
+                  <option key={ b.id } value={b.account_no}>{b.name}</option>
+                ))}
+
               </select>
               <span className="label">OR</span>
 
@@ -23,6 +68,8 @@ const TransferMoney = () => {
                 type="number"
                 className="input"
                 placeholder="Type Account Number Here"
+                value={accountNumber}
+                onChange={(e) => { setAccountNumber(e.target.value); setBeneficiary(""); }}
               />
 
               <label className="label">Amount</label>
@@ -30,16 +77,20 @@ const TransferMoney = () => {
                 type="number"
                 className="input"
                 placeholder="Type Amount Here"
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
               />
 
               <legend className="fieldset-legend">Remark</legend>
               <textarea
                 className="textarea h-24"
                 placeholder="Type Remark Here"
+                value={remark}
+                onChange={(e) => setRemark(e.target.value)}
               ></textarea>
               <div className="label">Optional</div>
 
-              <button className="btn btn-soft btn-primary">Transfer</button>
+              <button type="button" className="btn btn-soft btn-primary" onClick={transfer}>Transfer</button>
             </fieldset>
           </form>
         </div>

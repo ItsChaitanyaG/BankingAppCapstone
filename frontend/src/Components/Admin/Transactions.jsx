@@ -1,4 +1,29 @@
+import { useEffect } from "react";
+import { useState } from "react";
+import api from "../../api/axios";
+
 const Transactions = () => {
+
+  const [transactions, setTransactions] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+
+    const getTransactions = async() => {
+      try {
+        const res = await api.get("/transactions");
+        setTransactions(res.data.data)
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    getTransactions();
+  }, [])
+
+  if(loading) return <>Loading...</>;
+
   return (
     <>
       <div className="m-15">
@@ -12,21 +37,22 @@ const Transactions = () => {
                 <th>Sender</th>
                 <th>Receiver</th>
                 <th>Amount</th>
-                <th>Status</th>
                 <th>Date</th>
                 <th>Remark</th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <th>1</th>
-                <td>Cy Ganderton</td>
-                <td>John Doe</td>
-                <td>100.00</td>
-                <td>Completed</td>
-                <td>12/16/2020</td>
-                <td>Pizza Party</td>
-              </tr>
+              {transactions.map((t) => (
+                <tr key={t.id}>
+                  <th>{ t.id }</th>
+                  <td>{t.sender.acc_no}</td>
+                  <td>{t.receiver.acc_no}</td>
+                  <td>{t.amount}</td>
+                  <td>{new Date(t.createdAt).toLocaleString()}</td>
+                  <td>{t.remark || "-"}</td>
+                </tr>
+              ))}
+
             </tbody>
           </table>
         </div>
