@@ -10,9 +10,11 @@ const TransactionHistory = () => {
   const { selectedAccount } = useOutletContext();
 
   useEffect(() => {
+    if (!selectedAccount) return ;
+
     const getTransactions = async () => {
       try {
-        const res = await api.get(`/${selectedAccount.id}/transactions`);
+        const res = await api.get(`user/${selectedAccount.id}/transactions`);
         setTransactions(res.data.data);
 
       } catch (error) {
@@ -24,7 +26,6 @@ const TransactionHistory = () => {
 
     getTransactions();
 
-    if (!selectedAccount) return <div>Please select an account</div>;
   }, [selectedAccount])
 
   if (loading) return <div>Loading...</div>;
@@ -63,6 +64,7 @@ const TransactionHistory = () => {
                   <th>Date</th>
                   <th>Counterparty</th>
                   <th>Amount</th>
+                  <th>Remark</th>
                 </tr>
               </thead>
               <tbody>
@@ -73,6 +75,7 @@ const TransactionHistory = () => {
                     <td>{new Date(t.createdAt).toLocaleString()}</td>
                     <td>{t.receiver.acc_no}</td>
                     <td>{t.amount}</td>
+                    <td>{t.remark}</td>
                   </tr>
                 ))}
               </tbody>

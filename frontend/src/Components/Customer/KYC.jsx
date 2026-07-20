@@ -4,24 +4,30 @@ import useAuth from "../../Context/useAuth.js";
 
 
 const KYC = () => {
-  const [docType, setDocType] = useState("Select Type");
+  const [docType, setDocType] = useState("");
   const [docNo, setDocNo] = useState();
-  const [file, setFile] = useState(null);
-  const {user, loading} = useAuth();
+  const [file, setFile] = useState([]);
+  const {user, loading, refreshUser} = useAuth();
 
   if (loading) return <div>Loading...</div>;
 
   const submitKyc = async () => {
     try {
+      console.log("docType:", docType);
+
       const formData = new FormData();
 
       formData.append("document", file);
+      formData.append("doc_type", docType);
+      formData.append("doc_no", docNo);
 
       await axios.post(
         "http://localhost:8000/api/v1/user/kycRequest",
         formData,
         { withCredentials: true },
       );
+
+      await refreshUser();
 
       alert("KYC Submitted Successfully");
     } catch (error) {
@@ -43,14 +49,14 @@ const KYC = () => {
 
               <legend className="fieldset-legend">Document type</legend>
               <select
-                defaultValue={docType}
                 className="select"
-                onSelect={(e) => setDocType(e.target.value)}
+                value={docType}
+                onChange={(e) => setDocType(e.target.value)}
               >
-                <option disabled={true}>Document type</option>
-                <option>Aadhaar</option>
-                <option>PAN</option>
-                <option>Passport</option>
+                <option value="" disabled>Document type</option>
+                <option value="Aadhaar">Aadhar</option>
+                <option value="PAN">PAN</option>
+                <option value="Passport">Passport</option>
               </select>
 
               <label className="label">Document number</label>
@@ -67,12 +73,12 @@ const KYC = () => {
                 type="file"
                 accept=".pdf"
                 className="file-input"
-                value={file}
-                onChange={(e) => setFile(e.target.value)}
+
+                onChange={(e) => setFile(e.target.files[0])}
               />
               <label className="label">Max size 2MB</label>
 
-              <button className="btn btn-soft" onClick={submitKyc}>
+              <button type="button" className="btn btn-soft" onClick={submitKyc}>
                 Submit
               </button>
             </fieldset>

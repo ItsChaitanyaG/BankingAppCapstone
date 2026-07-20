@@ -11,7 +11,7 @@ const Transactions = () => {
 
     const getTransactions = async() => {
       try {
-        const res = await api.get("/transactions");
+        const res = await api.get("admin/transactions");
         setTransactions(res.data.data)
       } catch (error) {
         console.error(error);

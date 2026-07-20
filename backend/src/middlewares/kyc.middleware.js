@@ -1,7 +1,9 @@
-import ApiError from "../utils/ApiError";
-import AsyncHandler from "../utils/AsyncHandler";
+import ApiError from "../utils/ApiError.js";
+import AsyncHandler from "../utils/AsyncHandler.js";
+import { prisma } from "../lib/prisma.js";
 
-const verifyKyc = AsyncHandler(async (req, _, next) => {
+
+const checkKycVerified = AsyncHandler(async (req, _, next) => {
   const kyc = await prisma.kyc.findUnique({
     where: { user_id: req.user.id },
   });
@@ -17,4 +19,4 @@ const verifyKyc = AsyncHandler(async (req, _, next) => {
   next();
 });
 
-export default verifyKyc;
+export default checkKycVerified;

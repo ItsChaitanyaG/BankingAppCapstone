@@ -53,7 +53,7 @@ const addKyc = async (userId, doc_type, doc_no, document) => {
         user_id: userId,
         doc_type,
         doc_no,
-        doc_url: document.url,
+        doc_url: document.secure_url,
       },
     });
 
@@ -64,6 +64,7 @@ const addKyc = async (userId, doc_type, doc_no, document) => {
 };
 
 const kycRequest = AsyncHandler(async (req, res) => {
+
   const { doc_type, doc_no } = req.body;
 
   if (!doc_type || !doc_no) {
@@ -76,7 +77,7 @@ const kycRequest = AsyncHandler(async (req, res) => {
     throw new ApiError(400, "Unauthorized request");
   }
 
-  const docLocalPath = req.file?.document[0]?.path;
+  const docLocalPath = req.files?.document[0].path;
 
   if (!docLocalPath) {
     throw new ApiError(400, "Document is required.");
@@ -119,8 +120,11 @@ const createAccount = async (user, accType, openingBalance) => {
       },
     });
 
+  console.log("=== addAccount controller ===");
+
     return newAccount;
   } catch (error) {
+    console.error("Create account error:", error);
     throw new ApiError(500, "Failed to create account");
   }
 };
@@ -129,6 +133,9 @@ const addAccount = AsyncHandler(async (req, res) => {
   const { accType, openingBalance } = req.body;
   const user = await prisma.user.findUnique({
     where: { id: req.user.id },
+    include: {
+        account: true,
+      },
   });
 
   if (!accType || !openingBalance) {
@@ -156,11 +163,11 @@ const addAccount = AsyncHandler(async (req, res) => {
 
 //beneficiaries
 const getBeneficiaries = AsyncHandler(async (req, res) => {
-  const { accountId } = req.params;
+  const accountId = Number(req.params.accountId);
 
   const account = await prisma.account.findFirst({
     where: {
-      id: Number(accountId),
+      id: accountId,
       user_id: req.user.id,
     }
   })
@@ -171,7 +178,7 @@ const getBeneficiaries = AsyncHandler(async (req, res) => {
 
   const beneficiaries = await prisma.beneficiary.findMany({
     where: {
-      owner_acc: Number(accountId),
+      owner_acc_id: accountId,
     }
   })
 
@@ -296,7 +303,7 @@ const transferMoney = AsyncHandler(async (req, res) => {
     throw new ApiError(403, "Unauthorized Request");
   }
 
-  if (!accountNo || Number(amount) <= 0) {
+  if (!Number(accountNo) || Number(amount) <= 0) {
     throw new ApiError(400, "Invalid amount or account number");
   }
 

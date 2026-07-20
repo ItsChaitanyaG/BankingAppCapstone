@@ -32,7 +32,7 @@ const Accounts = () => {
     }
 
     try {
-      await api.post("/user/account/addAccount", { accountType, openingBalance: Number(openingBalance) })
+      await api.post("/user/account/addAccount", { accType: accountType, openingBalance: Number(openingBalance) })
 
       await refreshUser();
       alert("Account created successfully");
@@ -64,9 +64,9 @@ const Accounts = () => {
 
                   <label className="label">Account Type</label>
                   <select className="select" value={accountType} onChange={(e) => setAccountType(e.target.value)}>
-                    <option disabled={true}>Pick a type</option>
-                    <option>SAVINGS</option>
-                    <option>CURRENT</option>
+                    <option value="" disabled>Pick a type</option>
+                    <option value="SAVINGS">SAVINGS</option>
+                    <option value="CURRENT">CURRENT</option>
                   </select>
 
                   <label className="label">Opening Balance</label>

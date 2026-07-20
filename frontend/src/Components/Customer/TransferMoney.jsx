@@ -26,8 +26,8 @@ const TransferMoney = () => {
     }
 
     try {
-      await api.post(`/${selectedAccount.id}/transfer`, {
-        accountNumber,
+      await api.patch(`user/${selectedAccount.id}/transfer`, {
+        accountNo: accountNumber,
         amount,
         remark,
       });

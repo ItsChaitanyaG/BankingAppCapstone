@@ -72,6 +72,10 @@ const router = createBrowserRouter([
         path: "accounts/:id",
         element: <AccountDetail />,
       },
+      {
+        path: "beneficiaries",
+        element: <Beneficiaries />,
+      },
     ],
   },
   {

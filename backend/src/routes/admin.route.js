@@ -6,6 +6,8 @@ import {
   getKyc,
   rejectKyc,
   verifyKyc,
+  getTransactions,
+  getTransactionDetails
 } from "../controllers/admin.controller.js";
 import verifyJWT from "../middlewares/auth.middleware.js";
 import verifyAdmin from "../middlewares/admin.middleware.js";

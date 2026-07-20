@@ -16,6 +16,10 @@ const Dashboard = () => {
 
   const hasAccounts = user.account?.length > 0;
 
+  if (hasAccounts && !selectedAccount) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <>
       <div className="summery-card" data-theme="dark">

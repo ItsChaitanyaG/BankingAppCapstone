@@ -29,7 +29,7 @@ const Beneficiaries = () => {
 
   const addBeneficiary = async () => {
     try {
-      await api.post(`/user/beneficiaries/${selectedAccount.id}`, { name, bankName, accountNumber, maxLimit });
+      await api.post(`/user/beneficiaries/${selectedAccount.id}`, { name, bank_name: bankName, account_no: accountNumber, max_limit: maxLimit });
 
       await getBeneficiaries();
 

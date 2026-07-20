@@ -9,7 +9,7 @@ import {
   transferMoney,
   transactionHistory,
 } from "../controllers/user.controller.js";
-import { verifyKyc } from "../controllers/admin.controller.js";
+import checkKycVerified from "../middlewares/kyc.middleware.js";
 import { upload } from "../middlewares/multer.middleware.js";
 
 const router = Router();
@@ -22,19 +22,19 @@ router
   .route("/kycRequest")
   .post(
     verifyJWT,
-    upload.fields({ name: "document", maxCount: 1 }),
+    upload.fields([{ name: "document", maxCount: 1 }]),
     kycRequest,
   );
 
 //account
-router.route("/account/addAccount").post(verifyJWT, verifyKyc, addAccount);
+router.route("/account/addAccount").post(verifyJWT, checkKycVerified, addAccount);
 
 //beneficiaries
 router.route("/beneficiaries/:accountId").get(verifyJWT, getBeneficiaries);
-router.route("/beneficiaries/:accountId").post(verifyJWT, verifyKyc, addBeneficiary);
+router.route("/beneficiaries/:accountId").post(verifyJWT, checkKycVerified, addBeneficiary);
 
 //transaction
-router.route("/:senderAccId/transfer").post(verifyJWT, verifyKyc, transferMoney);
+router.route("/:senderAccId/transfer").patch(verifyJWT, checkKycVerified, transferMoney);
 router.route("/:accountId/transactions").get(verifyJWT, transactionHistory);
 
 

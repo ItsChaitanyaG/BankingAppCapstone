@@ -61,7 +61,16 @@ const getAllKyc = AsyncHandler(async (req, res) => {
 
 const getKyc = AsyncHandler(async (req, res) => {
   const kyc = await prisma.kyc.findUnique({
-    where: { id: req.params.id },
+    where: { id: Number(req.params.id) },
+    include: {
+      user: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+        },
+      },
+    },
   });
 
   if (!kyc) {
@@ -74,8 +83,9 @@ const getKyc = AsyncHandler(async (req, res) => {
 });
 
 const verifyKyc = AsyncHandler(async (req, res) => {
+
   const kyc = await prisma.kyc.update({
-    where: { id: req.params.id },
+    where: { id: Number(req.params.id) },
     data: { status: "VERIFIED" },
   });
 
