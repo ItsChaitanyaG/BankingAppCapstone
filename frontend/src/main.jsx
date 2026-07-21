@@ -22,6 +22,7 @@ import Layout2 from "./Layout2.jsx";
 import Accounts from "./Components/Customer/Accounts.jsx";
 import AccountDetail from "./Components/Customer/AccountDetail.jsx";
 import AuthProvider from "./Context/AuthProvider.jsx";
+import { Toaster } from 'react-hot-toast';
 
 const router = createBrowserRouter([
   {
@@ -108,6 +109,9 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <RouterProvider router={router} />
+    <>
+      <RouterProvider router={router} />
+      <Toaster />
+    </>
   </StrictMode>,
 );

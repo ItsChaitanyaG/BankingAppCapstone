@@ -1,12 +1,14 @@
 import { useEffect } from "react";
 import { useState } from "react";
-import { useOutletContext } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import api from "../../api/axios";
+import toast from "react-hot-toast";
 
 const Beneficiaries = () => {
 
   const { selectedAccount } = useOutletContext();
   const [beneficiaries, setBeneficiaries] = useState([]);
+  const navigate = useNavigate();
 
   const [name, setName] = useState("");
   const [bankName, setBankName] = useState("");
@@ -23,7 +25,9 @@ const Beneficiaries = () => {
       const res = await api.get(`/user/beneficiaries/${selectedAccount.id}`);
       setBeneficiaries(res.data.data);
     } catch (error) {
-      console.error(error);
+      toast.error(
+        error?.response?.data?.message || "Failed to fetch beneficiaries"
+      )
     }
   }
 
@@ -33,12 +37,16 @@ const Beneficiaries = () => {
 
       await getBeneficiaries();
 
+      toast.success("Beneficiary added successfully");
+
       setName("");
       setBankName("");
       setAccountNumber("");
       setMaxLimit("");
     } catch (error) {
-      console.error(error);
+      toast.error(
+        error?.response?.data?.message || "Failed to add beneficiary"
+      )
     }
   }
 
@@ -50,6 +58,8 @@ const Beneficiaries = () => {
   return (
     <>
       <div className="m-15">
+        <button className="btn btn-ghost mb-6 flex justify-self-start" onClick={() => navigate(-1)}>← Back</button>
+
         <h1 className="justify-self-start">Beneficiaries</h1>
 
         <div>

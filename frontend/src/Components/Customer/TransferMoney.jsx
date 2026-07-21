@@ -1,11 +1,13 @@
 import { useState } from "react";
 import api from "../../api/axios.js";
-import { useOutletContext } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import useAuth from "../../Context/useAuth.js";
+import toast from "react-hot-toast";
 
 const TransferMoney = () => {
 
   const { refreshUser } = useAuth();
+  const navigate = useNavigate();
 
   const [beneficiary, setBeneficiary] = useState("");
   const [accountNumber, setAccountNumber] = useState("");
@@ -19,18 +21,26 @@ const TransferMoney = () => {
 
   const beneficiaries = selectedAccount.beneficiaries || [];
 
-  const transfer = async() => {
+  const transfer = async () => {
     if (!accountNumber || !amount) {
-      alert("Please fill in all fields");
+      toast.error("Please fill in all fields");
       return;
     }
 
     try {
-      await api.patch(`user/${selectedAccount.id}/transfer`, {
-        accountNo: accountNumber,
-        amount,
-        remark,
-      });
+      await toast.promise(
+        api.patch(`user/${selectedAccount.id}/transfer`, {
+          accountNo: accountNumber,
+          amount,
+          remark,
+        }),
+        {
+          loading: "Processing transfer...",
+          success: "Money transferred successfully!",
+          error: (err) =>
+            err.response?.data?.message || "Transfer failed",
+        }
+      );
 
       await refreshUser();
 
@@ -46,7 +56,8 @@ const TransferMoney = () => {
   return (
     <>
       <div className="m-20">
-        <h2>Transfer Money</h2>
+        <button className="btn btn-ghost mb-6 flex justify-self-start" onClick={() => navigate(-1)}>← Back</button>
+        <h1>Transfer Money</h1>
 
         <div className="flex-col justify-items-center p-10">
           <form>

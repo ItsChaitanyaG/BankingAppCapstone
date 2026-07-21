@@ -1,13 +1,37 @@
 
 import { Link, useOutletContext } from "react-router-dom";
 import useAuth from "../../Context/useAuth.js";
+import { useState } from "react";
+import { useEffect } from "react";
+import api from "../../api/axios.js"
+import toast from 'react-hot-toast';
 
 const Dashboard = () => {
   const { user, loading } = useAuth();
   const { selectedAccount } = useOutletContext();
+  const [transactions, setTransactions] = useState([]);
+
+  useEffect(() => {
+
+    if (!selectedAccount) return;
+
+    const getTransactions = async () => {
+
+      try {
+        const res = await api.get(`/user/${selectedAccount.id}/transactions`);
+
+        setTransactions(res.data.data);
+      } catch (error) {
+        toast.error(
+          error.response?.data?.message || "Failed to fetch transactions"
+        )
+      }
+    }
+    getTransactions();
+  },[selectedAccount])
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div className="loading loading-spinner">Loading...</div>;
   }
 
   if (!user ) {
@@ -17,8 +41,10 @@ const Dashboard = () => {
   const hasAccounts = user.account?.length > 0;
 
   if (hasAccounts && !selectedAccount) {
-    return <div>Loading...</div>;
+    return <div className="loading loading-spinner">Loading...</div>;
   }
+
+
 
   return (
     <>
@@ -58,7 +84,7 @@ const Dashboard = () => {
         </div>
       </div>
 
-      <div className="my-10" data-theme="dark">
+      <div className="" data-theme="dark">
         <ul className="menu menu-vertical lg:menu-horizontal bg-base-200 rounded-box gap-10">
           <li>
             <Link to="/user/transfer-money">Transfer Money</Link>
@@ -84,36 +110,21 @@ const Dashboard = () => {
               <tr>
                 <th></th>
                 <th>Date</th>
-                <th>To</th>
-                <th>Status</th>
+                <th>Counterparty</th>
                 <th>Amount</th>
+                <th>Remark</th>
               </tr>
             </thead>
             <tbody>
-              {/* row 1 */}
-              <tr>
-                <th>1</th>
-                <td>2023-05-15</td>
-                <td>Cy Ganderton</td>
-                <td>Success</td>
-                <td>$100</td>
-              </tr>
-              {/* row 2 */}
-              <tr>
-                <th>2</th>
-                <td>2023-05-14</td>
-                <td>Hart Hagerty</td>
-                <td>Failed</td>
-                <td>$50</td>
-              </tr>
-              {/* row 3 */}
-              <tr>
-                <th>3</th>
-                <td>2023-05-13</td>
-                <td>Brice Swyre</td>
-                <td>Success</td>
-                <td>$100</td>
-              </tr>
+              {transactions.slice(0, 4).map((t) => (
+                <tr key={t.id}>
+                  <th>{t.id}</th>
+                  <td>{t.createdAt}</td>
+                  <td>{t.receiver_id === selectedAccount.id ? t.sender.acc_no : t.receiver.acc_no}</td>
+                  <td>{t.amount}</td>
+                  <td>{t.remark}</td>
+                </tr>
+              ))}
             </tbody>
           </table>
         </div>

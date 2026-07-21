@@ -1,13 +1,15 @@
 import { useEffect } from "react";
 import { useState } from "react";
-import { useOutletContext } from "react-router-dom";
+import { useNavigate, useOutletContext } from "react-router-dom";
 import api from "../../api/axios";
+import { toast } from "react-hot-toast";
 
 const TransactionHistory = () => {
 
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
   const { selectedAccount } = useOutletContext();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!selectedAccount) return ;
@@ -18,7 +20,9 @@ const TransactionHistory = () => {
         setTransactions(res.data.data);
 
       } catch (error) {
-        console.error(error);
+        toast.error(
+          error.response?.data?.message || "Failed to load transaction history"
+        );
       } finally {
         setLoading(false);
       }
@@ -28,11 +32,13 @@ const TransactionHistory = () => {
 
   }, [selectedAccount])
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <div className="flex justify-center items-center loading loading-spinner">Loading...</div>;
 
   return (
     <>
-      <div>
+      <div className="m-20">
+        <button className="btn btn-ghost mb-6 flex justify-self-start" onClick={() => navigate(-1)}>← Back</button>
+
         <div className="flex justify-items-start m-15">
           <h2>Transaction History</h2>
         </div>

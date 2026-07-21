@@ -1,6 +1,8 @@
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-hot-toast";
+
 
 const Register = () => {
   const [name, setName] = useState("");
@@ -10,11 +12,19 @@ const Register = () => {
 
   const register = async () => {
     try {
-      await axios.post("http://localhost:8000/api/v1/auth/register", {
-        name,
-        email,
-        password,
-      });
+      await toast.promise(
+            axios.post("http://localhost:8000/api/v1/auth/register", {
+              name,
+              email,
+              password,
+            }),
+            {
+              loading: "Creating your account...",
+              success: "Registration successful!",
+              error: (err) =>
+                err.response?.data?.message || "Registration failed",
+            }
+          );
 
       navigate("/login");
     } catch (error) {
@@ -25,49 +35,53 @@ const Register = () => {
 
   return (
     <>
-      <div className="flex justify-center">
-        <fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
-          <legend className="fieldset-legend">Customer Registration</legend>
+      <div className="m-15">
+        <button className="btn btn-ghost mb-6 flex justify-self-start" onClick={() => navigate("/")}>← Back</button>
+        <div className="flex justify-center">
+          <fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
+            <legend className="fieldset-legend">Customer Registration</legend>
 
-          <label className="label">Full Name</label>
-          <input
-            type="text"
-            className="input"
-            placeholder="Full Name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
+            <label className="label">Full Name</label>
+            <input
+              type="text"
+              className="input"
+              placeholder="Full Name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
 
-          <label className="label">Email</label>
-          <input
-            type="email"
-            className="input"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
+            <label className="label">Email</label>
+            <input
+              type="email"
+              className="input"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
 
-          <label className="label">Password</label>
-          <input
-            type="password"
-            className="input"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
+            <label className="label">Password</label>
+            <input
+              type="password"
+              className="input"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
 
-          <button className="btn btn-neutral mt-4" onClick={register}>
-            Register
-          </button>
+            <button className="btn btn-neutral mt-4" onClick={register}>
+              Register
+            </button>
 
-          <div>
-            Have an account?{" "}
-            <a className="underline" href="/login">
-              Login
-            </a>
-          </div>
-        </fieldset>
+            <div>
+              Have an account?{" "}
+              <a className="underline" href="/login">
+                Login
+              </a>
+            </div>
+          </fieldset>
+        </div>
       </div>
+
     </>
   );
 };

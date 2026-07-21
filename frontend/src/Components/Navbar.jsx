@@ -1,20 +1,30 @@
 import { Link, useNavigate } from "react-router-dom";
 import useAuth from "../Context/useAuth";
 import api from "../api/axios";
+import { toast } from "react-hot-toast";
 
 const Navbar = ({ selectedAccount, setSelectedAccount }) => {
-  const { user } = useAuth();
+  const { user, setUser } = useAuth();
   const navigate = useNavigate();
 
   if (!user) return null;
 
   const logout = async () => {
     try {
-      await api.post("/auth/logout");
+      await toast.promise(
+        api.post("/auth/logout"),
+        {
+          loading: "Logging out...",
+          success: "Logged out successfully!",
+          error: (err) =>
+            err.response?.data?.message || "Logout failed",
+        }
+      );
+
+      setUser(null);
+      navigate("/login");
     } catch (error) {
       console.error(error);
-    } finally {
-      navigate("/login");
     }
   };
 
@@ -23,8 +33,9 @@ const Navbar = ({ selectedAccount, setSelectedAccount }) => {
       <div>
         <div className="navbar bg-base-300 shadow-sm flex justify-between">
           <div className="flex justify-self-start">
-            <Link to="/user/" className="btn btn-ghost text-xl">
-              BTS
+            <span className="m-2 font-bold">Banking System</span>
+            <Link to="/user/" className="btn btn-ghost text-l">
+              Dashboard
             </Link>
           </div>
           <div className="flex self-justify-end">
