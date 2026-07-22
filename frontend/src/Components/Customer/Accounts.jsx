@@ -1,7 +1,7 @@
 import { useState } from "react";
 import useAuth from "../../Context/useAuth";
-import { Link } from "react-router-dom";
-
+import { Link, useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 import api from "../../api/axios.js";
 
 
@@ -10,33 +10,46 @@ const Accounts = () => {
 
   const [accountType, setAccountType] = useState("");
   const [openingBalance, setOpeningBalance] = useState(0);
+  const navigate = useNavigate();
 
-  if(loading) return <div>Loading...</div>;
+  if(loading) return <div className="loading loading-spinner">Loading...</div>;
 
   if (!user.account) return null;
 
   const createAccount = async () => {
     if (!user.kyc) {
-      alert("Please complete your KYC first");
+      toast.error("Please complete your KYC first.");
       return;
     }
 
-    if (user.kyc === "PENDING" || user.kyc === "REJECTED") {
-      alert("Your KYC is pending or rejected");
+    if (
+      user.kyc.status === "PENDING" ||
+      user.kyc.status === "REJECTED"
+    ) {
+      toast.error("Your KYC is pending or rejected.");
       return;
     }
 
     if (!accountType || Number(openingBalance) <= 0) {
-      alert("Account type and opening balance are required");
+      toast.error("Account type and opening balance are required.");
       return;
     }
 
     try {
-      await api.post("/user/account/addAccount", { accType: accountType, openingBalance: Number(openingBalance) })
+      await toast.promise(
+        api.post("/user/account/addAccount", {
+          accType: accountType,
+          openingBalance: Number(openingBalance),
+        }),
+        {
+          loading: "Creating account...",
+          success: "Account created successfully!",
+          error: (err) =>
+            err.response?.data?.message || "Failed to create account",
+        }
+      );
 
       await refreshUser();
-      alert("Account created successfully");
-
     } catch (error) {
       console.error(error);
     }
@@ -45,7 +58,9 @@ const Accounts = () => {
   return (
     <>
       <div className="min-h-screen bg-base-200 p-6">
-        <div className="max-w-5xl mx-auto">
+        <div className="max-w-5xl m-15">
+          <button className="btn btn-ghost mb-6 flex justify-self-start" onClick={() => navigate("/user")}>← Back</button>
+
           <div className="flex justify-between items-center mb-8">
             <h1 className="text-3xl font-bold">My Accounts</h1>
 
@@ -93,7 +108,15 @@ const Accounts = () => {
                       <p className="text-gray-500 mt-2">Account Number</p>
 
                       <p className="font-semibold tracking-wider">
-                        {account.accNo}
+                        {account.acc_no}
+                      </p>
+                    </div>
+
+                    <div className="text-center">
+                      <p className="text-gray-500 mt-2">Account Type</p>
+
+                      <p className="font-semibold tracking-wider">
+                        {account.acc_type}
                       </p>
                     </div>
 

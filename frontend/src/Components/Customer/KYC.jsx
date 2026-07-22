@@ -47,7 +47,7 @@ const KYC = () => {
     return (
       <>
         <div className="m15">
-          <button className="btn btn-ghost mb-6 flex justify-self-start" onClick={() => navigate(-1)}>← Back</button>
+          <button className="btn btn-ghost mb-6 flex justify-self-start" onClick={() => navigate("/user")}>← Back</button>
 
           <div className="flex flex-col items-center">
 

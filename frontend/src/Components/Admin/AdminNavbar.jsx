@@ -1,5 +1,6 @@
 import { Link, useNavigate } from "react-router-dom";
 import api from "../../api/axios";
+import toast from "react-hot-toast";
 
 const AdminNavbar = () => {
 
@@ -7,11 +8,19 @@ const AdminNavbar = () => {
 
   const logout = async () => {
     try {
-      await api.post("/auth/logout");
+      await toast.promise(
+        api.post("/auth/logout"),
+        {
+          loading: "Logging out...",
+          success: "Logged out successfully!",
+          error: (err) =>
+            err.response?.data?.message || "Logout failed",
+        }
+      );
+
+      navigate("/login");
     } catch (error) {
       console.error(error);
-    } finally {
-      navigate("/login");
     }
   };
 

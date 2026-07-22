@@ -37,7 +37,7 @@ const Profile = () => {
 
     <>
       <div className="m-15 flex-col justify-items-center">
-        <button className="btn btn-ghost mb-6 flex justify-self-start" onClick={() => navigate(-1)}>← Back</button>
+        <button className="btn btn-ghost mb-6 flex justify-self-start" onClick={() => navigate("/user")}>← Back</button>
         <div className="flex items-center gap-5 justify-self-start">
           <h1 className="flex justify-self-start">Profile</h1>
           <button className="btn btn-sm">Edit Profile</button>
@@ -47,24 +47,21 @@ const Profile = () => {
           <fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4 justify-items-start">
             <legend className="fieldset-legend">Profile Information</legend>
 
-            <label className="label">Full Name</label>
+            <label className="label text-gray-300">Full Name</label>
             <input
               type="text"
-              className="input font-black"
+              className="input font-medium text-blue-50 border border-gray-300"
               value={user.name}
               disabled
             />
 
-            <label className="label">Email</label>
+            <label className="label text-gray-300">Email</label>
             <input
               type="email"
-              className="input font-black"
+              className="input font-medium text-blue-50 border border-gray-300"
               value={user.email}
               disabled
             />
-
-            <label className="label">Account Number</label>
-            <input type="number" className="input font-black" value="1002031" disabled />
 
             <button className="btn btn-soft btn-warning my-5" onClick={logout}>Log Out</button>
           </fieldset>

@@ -1,5 +1,5 @@
 
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import useAuth from "../../Context/useAuth";
 
 const AccountDetail = () => {
@@ -7,12 +7,15 @@ const AccountDetail = () => {
   const { user} = useAuth();
   const account = user?.account?.find((acc) => acc.id === Number(id));
   const beneficiaries = account?.beneficiaries || [];
+  const navigate = useNavigate();
 
   if (!account) return <div>Account not found</div>;
 
   return (
     <>
       <div className="min-h-screen bg-base-200 p-6">
+        <button className="btn btn-ghost mb-6 flex justify-self-start" onClick={() => navigate(-1)}>← Back</button>
+
         <div className="max-w-6xl mx-auto">
           {/* Header */}
           <div className="flex justify-between items-center mb-6">
@@ -35,7 +38,7 @@ const AccountDetail = () => {
 
                 <div>
                   <p className="text-sm text-gray-500">Available Balance</p>
-                  <h2 className="text-3xl font-bold text-success">{account.balance.toLocaleString()}</h2>
+                  <h2 className="text-3xl font-bold text-success">₹{account.balance.toLocaleString()}</h2>
                 </div>
               </div>
             </div>

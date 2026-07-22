@@ -65,7 +65,7 @@ const Dashboard = () => {
 
             <div className="stat">
               <div className="stat-title">Balance</div>
-              <div className="stat-value">{hasAccounts ? selectedAccount.balance : "-"}</div>
+              <div className="stat-value">₹{hasAccounts ? selectedAccount.balance : "-"}</div>
               <div className="stat-desc"></div>
             </div>
 
@@ -119,9 +119,9 @@ const Dashboard = () => {
               {transactions.slice(0, 4).map((t) => (
                 <tr key={t.id}>
                   <th>{t.id}</th>
-                  <td>{t.createdAt}</td>
+                  <td>{new Date(t.createdAt).toLocaleString()}</td>
                   <td>{t.receiver_id === selectedAccount.id ? t.sender.acc_no : t.receiver.acc_no}</td>
-                  <td>{t.amount}</td>
+                  <td>₹{t.amount}</td>
                   <td>{t.remark}</td>
                 </tr>
               ))}

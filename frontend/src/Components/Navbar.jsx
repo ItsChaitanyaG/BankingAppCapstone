@@ -33,7 +33,7 @@ const Navbar = ({ selectedAccount, setSelectedAccount }) => {
       <div>
         <div className="navbar bg-base-300 shadow-sm flex justify-between">
           <div className="flex justify-self-start">
-            <span className="m-2 font-bold">Banking System</span>
+            <span className="m-2 font-bold text-white">NeoBank</span>
             <Link to="/user/" className="btn btn-ghost text-l">
               Dashboard
             </Link>
@@ -81,6 +81,9 @@ const Navbar = ({ selectedAccount, setSelectedAccount }) => {
                     </li>
                     <li>
                       <Link to="/user/accounts">Accounts</Link>
+                    </li>
+                    <li>
+                      <Link to="/user/beneficiaries">Beneficiaries</Link>
                     </li>
                     <li>
                       <button onClick={logout}>Logout</button>

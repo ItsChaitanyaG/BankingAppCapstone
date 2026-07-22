@@ -8,8 +8,21 @@ const TransactionHistory = () => {
 
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedMonth, setSelectedMonth] = useState("");
+  const [selectedYear, setSelectedYear] = useState("");
+  const currentYear = new Date().getFullYear();
+  const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
   const { selectedAccount } = useOutletContext();
   const navigate = useNavigate();
+
+  const filteredTransactions = transactions.filter((t) => {
+    const date = new Date(t.createdAt);
+
+    const matchedMonth = selectedMonth === "" || date.getMonth() === Number(selectedMonth);
+    const matchedYear = selectedYear === "" || date.getFullYear() === Number(selectedYear);
+
+    return matchedMonth && matchedYear;
+  })
 
   useEffect(() => {
     if (!selectedAccount) return ;
@@ -37,28 +50,28 @@ const TransactionHistory = () => {
   return (
     <>
       <div className="m-20">
-        <button className="btn btn-ghost mb-6 flex justify-self-start" onClick={() => navigate(-1)}>← Back</button>
+        <button className="btn btn-ghost mb-6 flex justify-self-start" onClick={() => navigate("/user")}>← Back</button>
 
         <div className="flex justify-items-start m-15">
           <h2>Transaction History</h2>
         </div>
         <div>
           <div className="flex justify-center gap-5 my-15">
-            <select defaultValue="Month" className="select">
-              <option disabled={true}>Month</option>
-              <option>June</option>
-              <option>May</option>
-              <option>April</option>
+            <label className="label">Month</label>
+            <select value={selectedMonth} onChange={(e) => setSelectedMonth(e.target.value)} className="select">
+              <option value="">None</option>
+              {months.map((month, index) => (
+                <option key={month} value={index}>{month}</option>
+              ))}
             </select>
 
-            <select defaultValue="Year" className="select">
-              <option disabled={true}>Year</option>
-              <option>2026</option>
-              <option>2025</option>
-              <option>2024</option>
+            <label className="label">Year</label>
+            <select value={selectedYear} onChange={(e) => setSelectedYear(e.target.value)} className="select">
+              <option value="">None</option>
+              <option>{currentYear}</option>
+              <option>{currentYear - 1}</option>
+              <option>{currentYear - 2}</option>
             </select>
-
-            <button className="btn btn-soft btn-info">Filter</button>
           </div>
 
           <div className="overflow-x-auto m-15 flex justify-center">
@@ -74,13 +87,13 @@ const TransactionHistory = () => {
                 </tr>
               </thead>
               <tbody>
-                {transactions.map((t) => (
+                {filteredTransactions.map((t) => (
 
                   <tr key={t.id}>
                     <th>{ t.id }</th>
                     <td>{new Date(t.createdAt).toLocaleString()}</td>
                     <td>{t.receiver.acc_no}</td>
-                    <td>{t.amount}</td>
+                    <td>₹{t.amount}</td>
                     <td>{t.remark}</td>
                   </tr>
                 ))}

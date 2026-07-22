@@ -56,7 +56,7 @@ const TransferMoney = () => {
   return (
     <>
       <div className="m-20">
-        <button className="btn btn-ghost mb-6 flex justify-self-start" onClick={() => navigate(-1)}>← Back</button>
+        <button className="btn btn-ghost mb-6 flex justify-self-start" onClick={() => navigate("/user")}>← Back</button>
         <h1>Transfer Money</h1>
 
         <div className="flex-col justify-items-center p-10">

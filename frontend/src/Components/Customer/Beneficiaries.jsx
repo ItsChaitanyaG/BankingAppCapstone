@@ -3,12 +3,14 @@ import { useState } from "react";
 import { useNavigate, useOutletContext } from "react-router-dom";
 import api from "../../api/axios";
 import toast from "react-hot-toast";
+import useAuth from "../../Context/useAuth";
 
 const Beneficiaries = () => {
 
   const { selectedAccount } = useOutletContext();
   const [beneficiaries, setBeneficiaries] = useState([]);
   const navigate = useNavigate();
+  const { refreshUser } = useAuth();
 
   const [name, setName] = useState("");
   const [bankName, setBankName] = useState("");
@@ -32,23 +34,37 @@ const Beneficiaries = () => {
   }
 
   const addBeneficiary = async () => {
+    if (!name || !bankName || !accountNumber || !maxLimit) {
+      toast.error("Please fill in all fields.");
+      return;
+    }
+
     try {
-      await api.post(`/user/beneficiaries/${selectedAccount.id}`, { name, bank_name: bankName, account_no: accountNumber, max_limit: maxLimit });
+      await toast.promise(
+        api.post(`/user/beneficiaries/${selectedAccount.id}`, {
+          name,
+          bank_name: bankName,
+          account_no: accountNumber,
+          max_limit: Number(maxLimit),
+        }),
+        {
+          loading: "Adding beneficiary...",
+          success: "Beneficiary added successfully!",
+          error: (err) =>
+            err.response?.data?.message || "Failed to add beneficiary",
+        }
+      );
 
       await getBeneficiaries();
-
-      toast.success("Beneficiary added successfully");
 
       setName("");
       setBankName("");
       setAccountNumber("");
       setMaxLimit("");
     } catch (error) {
-      toast.error(
-        error?.response?.data?.message || "Failed to add beneficiary"
-      )
+      console.error(error);
     }
-  }
+  };
 
   useEffect(() => {
     getBeneficiaries();
@@ -58,7 +74,7 @@ const Beneficiaries = () => {
   return (
     <>
       <div className="m-15">
-        <button className="btn btn-ghost mb-6 flex justify-self-start" onClick={() => navigate(-1)}>← Back</button>
+        <button className="btn btn-ghost mb-6 flex justify-self-start" onClick={() => navigate("/user")}>← Back</button>
 
         <h1 className="justify-self-start">Beneficiaries</h1>
 
@@ -82,7 +98,7 @@ const Beneficiaries = () => {
                       <th>{b.id}</th>
                       <td>{b.account_no}</td>
                       <td>{b.name}</td>
-                      <td>{b.max_limit}</td>
+                      <td>₹{b.max_limit}</td>
                     </tr>
                   ))}
                 </tbody>
