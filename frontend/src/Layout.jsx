@@ -10,10 +10,22 @@ export default function Layout() {
   const [selectedAccount, setSelectedAccount] = useState(null);
 
   useEffect(() => {
-      if (user?.account?.length > 0 && !selectedAccount) {
-        setSelectedAccount(user.account[0]);
+      if (!user?.account?.length) {
+        setSelectedAccount(null);
+        return;
       }
-    }, [user, selectedAccount]);
+
+    if (!selectedAccount) {
+      setSelectedAccount(user.account[0]);
+      return;
+    }
+
+    const updatedAccount = user.account.find((acc) => acc.id === selectedAccount.id);
+
+    if (updatedAccount) {
+      setSelectedAccount(updatedAccount);
+    }
+    }, [user]);
 
   return (
     <>

@@ -1,11 +1,13 @@
 import { useEffect } from "react";
 import { useState } from "react";
 import api from "../../api/axios";
+import { useNavigate } from "react-router-dom";
 
 const Transactions = () => {
 
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
 
@@ -26,7 +28,8 @@ const Transactions = () => {
 
   return (
     <>
-      <div className="m-15">
+      <div className="min-h-screen m-15">
+        <button className="btn btn-ghost mb-6 flex justify-start" onClick={() => navigate("/admin")}>← Back</button>
         <h1 className="justify-self-start">Transactions</h1>
 
         <div className="m-15 overflow-x-auto">

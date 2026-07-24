@@ -1,10 +1,12 @@
 import { useEffect } from "react";
 import { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Customer = () => {
   const [customers, setCustomers] = useState([]);
   const [selectedCustomer, setSelectedCustomer] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const getCustomers = async () => {
@@ -32,6 +34,7 @@ const Customer = () => {
   return (
     <>
       <div className="m-15">
+        <button className="btn btn-ghost mb-6 flex justify-start" onClick={() => navigate("/admin")}>← Back</button>
         <h1 className="justify-self-start">Customers</h1>
 
         <div className="flex items-center gap-5 my-10">
@@ -65,7 +68,7 @@ const Customer = () => {
           </label>
         </div>
 
-        <div>
+        <div className="flex justify-center">
           <div className="overflow-x-auto">
             <table className="table">
               {/* head */}
@@ -82,29 +85,25 @@ const Customer = () => {
                 {customers.map((c) => {
                   return (
                     <tr key={c.id}>
-                      <th>
+                      {/* <th>
                         <label>
                           <input type="checkbox" className="checkbox" />
                         </label>
-                      </th>
+                      </th> */}
                       <td>
                         <div className="flex items-center gap-3">
-                          <div className="avatar">
-                            <div className="mask mask-squircle h-12 w-12">
-                              <img
-                                src="https://img.daisyui.com/images/profile/demo/2@94.webp"
-                                alt="Avatar Tailwind CSS Component"
-                              />
-                            </div>
-                          </div>
-                          <div>
-                            <div className="font-bold">{c.name}</div>
-                            <div className="text-sm opacity-50"></div>
-                          </div>
+                          {c.id}
+                          
                         </div>
                       </td>
                       <td>
-                        000000000
+                        <div>
+                            <div className="font-bold">{c.name}</div>
+                            <div className="text-sm opacity-50"></div>
+                          </div>
+                      </td>
+                      <td>
+                        {c.kyc.status}
                         <br />
                       </td>
                       <td>{c.email}</td>
@@ -138,10 +137,12 @@ const Customer = () => {
                 <p className="py-4">
                   Name: {selectedCustomer?.name} <br />
                   Email: {selectedCustomer?.email} <br />
-                  Account Number: <br />
-                  Balance: <br />
+                  1. Account Number: {selectedCustomer?.account[0]?.acc_no || "-"} <br />
+                  1. Balance: {selectedCustomer?.account[0]?.balance || "-"}<br />
+                  2. Account Number: {selectedCustomer?.account[1]?.acc_no || "-"} <br />
+                  2. Balance: {selectedCustomer?.account[1]?.balance || "-"}<br />
                   KYC Status: {selectedCustomer?.kyc?.status} <br />
-                  Created Date: {selectedCustomer?.createdAt} <br />
+                  Created Date:  <br />
                 </p>
               </div>
             </dialog>

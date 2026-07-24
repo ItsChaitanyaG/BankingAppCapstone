@@ -67,7 +67,7 @@ const KycDetails = () => {
   return (
     <>
       <div className="max-w-5xl mx-auto p-8">
-        <button className="btn btn-ghost mb-6" onClick={() => navigate(-1)}>← Back</button>
+        <button className="btn btn-ghost mb-6 flex justify-start" onClick={() => navigate(-1)}>← Back</button>
 
         <div className="card bg-base-100 shadow-xl">
           <div className="card-body">

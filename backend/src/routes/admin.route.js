@@ -1,5 +1,6 @@
 import { Router } from "express";
 import {
+  dashboard,
   getAllCustomers,
   getAllKyc,
   getCustomer,
@@ -13,6 +14,8 @@ import verifyJWT from "../middlewares/auth.middleware.js";
 import verifyAdmin from "../middlewares/admin.middleware.js";
 
 const router = Router();
+
+router.route("/dashboard").get(verifyJWT, verifyAdmin, dashboard);
 
 //customer
 router.route("/customers").get(verifyJWT, verifyAdmin, getAllCustomers);

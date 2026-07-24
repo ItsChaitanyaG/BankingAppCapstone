@@ -29,7 +29,7 @@ const AdminNavbar = () => {
       <div className="navbar bg-base-100 shadow-sm justify-between">
         <div className="flex justify-self-start">
           <Link className="btn btn-ghost text-xl " to="/admin">
-            BTS
+            NeoBank
           </Link>
         </div>
         <div className="flex justify-self-end">

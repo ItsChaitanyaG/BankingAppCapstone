@@ -3,10 +3,42 @@ import ApiResponse from "../utils/ApiResponse.js";
 import AsyncHandler from "../utils/AsyncHandler.js";
 import { prisma } from "../lib/prisma.js";
 
-const getAllCustomers = AsyncHandler(async (req, res) => {
+const dashboard = AsyncHandler(async (req, res) => {
   const customers = await prisma.user.findMany({
     where: { role: "CUSTOMER" },
     select: { id: true, name: true, email: true, role: true },
+  });
+
+  const accounts = await prisma.account.findMany({
+    select: {id: true, user_id: true, acc_no: true, acc_type: true, balance: true}
+  })
+
+  const kyc = await prisma.kyc.findMany();
+
+  const transactions = await prisma.transaction.findMany();
+
+  if (!customers || !accounts || !kyc || !transactions) {
+    throw new ApiError(500, "Failed to fetch dashboard data");
+  }
+
+  return res.status(200)
+    .json(new ApiResponse(200, { customers, accounts, kyc, transactions }, "Dashboard data fetched successfully"));
+
+})
+
+const getAllCustomers = AsyncHandler(async (req, res) => {
+  const customers = await prisma.user.findMany({
+    where: { role: "CUSTOMER" },
+    select: { id: true, name: true, email: true, role: true, 
+      account: {
+      select: { id: true, acc_no: true, balance: true },
+    },
+
+    kyc: {
+      select: { id: true, status: true },
+    },
+    },
+    
   });
 
   return res
@@ -18,14 +50,15 @@ const getCustomer = AsyncHandler(async (req, res) => {
   const customer = await prisma.user.findUnique({
     where: { id: req.params.id },
     select: { id: true, name: true, email: true },
-
-    account: {
+    include: {
+      account: {
       select: { id: true, acc_no: true, balance: true },
     },
 
     kyc: {
       select: { id: true, status: true },
     },
+    }
   });
 
   if (!customer) {
@@ -182,6 +215,7 @@ const getTransactionDetails = AsyncHandler(async (req, res) => {
 });
 
 export {
+  dashboard,
   getAllCustomers,
   getCustomer,
   getAllKyc,

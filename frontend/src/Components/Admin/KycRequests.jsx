@@ -1,10 +1,11 @@
 import axios from "axios";
 import { useEffect } from "react";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const KycRequests = () => {
   const [kyc, setKyc] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const getAllKyc = async () => {
@@ -27,6 +28,7 @@ const KycRequests = () => {
   return (
     <>
       <div className="m-15">
+        <button className="btn btn-ghost mb-6 flex justify-start" onClick={() => navigate("/admin")}>← Back</button>
         <h1 className="justify-self-start">KYC Requests</h1>
 
         <div className="flex justify-center m-15">
