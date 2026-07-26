@@ -20,9 +20,12 @@ app.use(cookieParser());
 import authRouter from "./routes/auth.route.js";
 import adminRouter from "./routes/admin.route.js";
 import userRouter from "./routes/user.route.js";
+import errorHandler from "./middlewares/error.middleware.js";
 
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/admin", adminRouter);
 app.use("/api/v1/user", userRouter);
+
+app.use(errorHandler);
 
 export default app;

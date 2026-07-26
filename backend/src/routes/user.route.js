@@ -3,6 +3,7 @@ import verifyJWT from "../middlewares/auth.middleware.js";
 import {
   addAccount,
   getProfile,
+  updateProfile,
   kycRequest,
   getBeneficiaries,
   addBeneficiary,
@@ -16,6 +17,7 @@ const router = Router();
 
 //profile
 router.route("/profile").get(verifyJWT, getProfile);
+router.route("/profile/update").put(verifyJWT, updateProfile);
 
 //kyc
 router

@@ -2,12 +2,18 @@ import { useNavigate } from "react-router-dom";
 import useAuth from "../../Context/useAuth";
 import api from "../../api/axios.js";
 import { toast } from "react-hot-toast";
+import { useState } from "react";
 
 
 const Profile = () => {
 
-  const { user, setUser, loading } = useAuth();
+  const { user, setUser, loading, refreshUser } = useAuth();
   const navigate = useNavigate();
+  
+  const [name, setName] = useState("");
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
 
   if (loading) {
@@ -33,6 +39,36 @@ const Profile = () => {
     }
   };
 
+  const updateProfile = async() => {
+    try {
+
+      await toast.promise(
+        api.put("/user/profile/update",
+          {
+            name, currentPassword, newPassword, confirmPassword
+          },
+        ),
+        {
+          loading: "Updating Profile...",
+          success: "Profile updated successfully!",
+          error: (err) => err.response?.data?.message || "Failed to update profile"
+        }
+      );
+
+      await refreshUser();
+      
+      setName("");
+      setCurrentPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
+
+      document.getElementById("edit_profile").close();
+      
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   return (
 
     <>
@@ -40,7 +76,41 @@ const Profile = () => {
         <button className="btn btn-ghost mb-6 flex justify-self-start" onClick={() => navigate("/user")}>← Back</button>
         <div className="flex items-center gap-5 justify-self-start">
           <h1 className="flex justify-self-start">Profile</h1>
-          <button className="btn btn-sm">Edit Profile</button>
+          
+          <button className="btn" onClick={()=>document.getElementById('edit_profile').showModal()}>Edit Profile</button>
+          <dialog id="edit_profile" className="modal">
+            <div className="modal-box">
+              <form method="dialog">
+                <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
+              </form>
+              <h3 className="font-bold text-lg text-blue-50">Edit Profile</h3>
+              <div className="flex-col justify-items-center my-10">
+                
+                <fieldset className="fieldset">
+                  <label className="label text-blue-50" htmlFor="name">Name</label>
+                  <input type="text" className="input" value={name} onChange={(e) => setName(e.target.value)}/>
+                </fieldset>
+
+                <fieldset className="fieldset">
+                  <label className="label text-blue-50" htmlFor="name">Current Password</label>
+                  <input type="password" className="input" value={currentPassword} onChange={(e) => setCurrentPassword(e.target.value)}/>
+                </fieldset>
+
+                <fieldset className="fieldset">
+                  <label className="label text-blue-50" htmlFor="name">New Password</label>
+                  <input type="password" className="input" value={newPassword} onChange={(e) => setNewPassword(e.target.value)}/>
+                </fieldset>
+
+                <fieldset className="fieldset">
+                  <label className="label text-blue-50" htmlFor="name">Confirm Password</label>
+                  <input type="password" className="input" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)}/>
+                </fieldset> <br/>
+
+                <button className="btn" onClick={updateProfile}>Submit</button>
+              </div>
+              
+            </div>
+          </dialog>
         </div>
 
         <div className="m-10">

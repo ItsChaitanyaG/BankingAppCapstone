@@ -3,6 +3,7 @@ import ApiResponse from "../utils/ApiResponse.js";
 import AsyncHandler from "../utils/AsyncHandler.js";
 import { prisma } from "../lib/prisma.js";
 import uploadToCloudinary from "../utils/Cloudinary.js";
+import { hashPassword, comparePassword } from "../utils/Password.util.js";
 
 //profile
 const getProfile = AsyncHandler(async (req, res) => {
@@ -44,6 +45,60 @@ const getProfile = AsyncHandler(async (req, res) => {
 
   return res.status(200).json(new ApiResponse(200, user, "success"));
 });
+
+const updateProfile = AsyncHandler(async(req, res) => {
+  const {name, currentPassword, newPassword, confirmPassword} = req.body;
+
+  const user = await prisma.user.findUnique({
+    where: {
+      id: req.user.id
+    }
+  });
+
+  if((newPassword || confirmPassword) && (newPassword !== confirmPassword)) {
+    throw new ApiError(400, "Confirm Password should be same as new Password");
+  }
+
+  if (!name && !newPassword) {
+    throw new ApiError(
+        400,
+        "Nothing to update"
+    );
+  }
+
+  const updateData = {};
+
+  if (name) {
+    
+    if(name === user.name){
+      throw new ApiError(400, "Name cannot be same as earlier");
+    }
+
+    updateData.name = name;
+
+  }
+
+  if (newPassword) {
+    const verifyPassword = await comparePassword(currentPassword, user.password);
+
+    if(!verifyPassword) {
+      throw new ApiError(400, "Current password is wrong");
+    }
+
+    updateData.password = await hashPassword(newPassword);
+  }
+
+  await prisma.user.update({
+    where: {
+      id: user.id
+    },
+    data: updateData 
+  });
+
+  return res.status(200)
+  .json(new ApiResponse(200, null, "Profile updated successfully"));
+  
+})
 
 //kyc
 const addKyc = async (userId, doc_type, doc_no, document) => {
@@ -392,4 +447,4 @@ const transactionHistory = AsyncHandler(async (req, res) => {
     .json(new ApiResponse(200, transactions, "Transactions fetched successfully"));
 })
 
-export { getProfile, kycRequest, addAccount, getBeneficiaries, addBeneficiary, transferMoney, transactionHistory };
+export { getProfile, updateProfile, kycRequest, addAccount, getBeneficiaries, addBeneficiary, transferMoney, transactionHistory };

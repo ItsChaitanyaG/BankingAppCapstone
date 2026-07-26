@@ -2,9 +2,11 @@ import { Link, useNavigate } from "react-router-dom";
 import useAuth from "../Context/useAuth";
 import api from "../api/axios";
 import { toast } from "react-hot-toast";
+import { useRef } from "react";
 
 const Navbar = ({ selectedAccount, setSelectedAccount }) => {
   const { user, setUser } = useAuth();
+  const menuRef = useRef(null);
   const navigate = useNavigate();
 
   if (!user) return null;
@@ -28,6 +30,12 @@ const Navbar = ({ selectedAccount, setSelectedAccount }) => {
     }
   };
 
+  const closeMenu = () => {
+    if(menuRef.current){
+      menuRef.current.open = false;
+    }
+  };
+
   return (
     <>
       <div>
@@ -45,16 +53,16 @@ const Navbar = ({ selectedAccount, setSelectedAccount }) => {
               </li>
 
               <li>
-                <details>
+                <details ref={menuRef}>
                   <summary>{selectedAccount ? `${selectedAccount.acc_no}` : "No Account"}</summary>
                   <ul className="bg-base-100 rounded-t-none p-2">
                     {
                       user.account?.length === 0 ? (
-                        <li>No Account</li>
+                        <li onClick={closeMenu}>No Account</li>
                       ) : (
                         user.account?.map((acc) => (
                           <li key={acc.id}>
-                            <button onClick={() => setSelectedAccount(acc)}>{acc.acc_no}</button>
+                            <button onClick={() => setSelectedAccount(acc)}>{acc.acc_no} </button>
                           </li>
                         ))
                       )
@@ -65,25 +73,25 @@ const Navbar = ({ selectedAccount, setSelectedAccount }) => {
               </li>
 
               <li>
-                <details>
+                <details ref={menuRef}>
                   <summary>User</summary>
                   <ul className="bg-base-100 rounded-t-none p-2">
                     <li>
-                      <Link to="/user/profile">Profile</Link>
+                      <Link to="/user/profile" onClick={closeMenu}>Profile</Link>
                     </li>
                     <li>
-                      <Link to="/user/transfer-money">Transfer Money</Link>
+                      <Link to="/user/transfer-money" onClick={closeMenu}>Transfer Money</Link>
                     </li>
                     <li>
-                      <Link to="/user/transaction-history">
+                      <Link to="/user/transaction-history" onClick={closeMenu}>
                         Transaction History
                       </Link>
                     </li>
                     <li>
-                      <Link to="/user/accounts">Accounts</Link>
+                      <Link to="/user/accounts" onClick={closeMenu}>Accounts</Link>
                     </li>
                     <li>
-                      <Link to="/user/beneficiaries">Beneficiaries</Link>
+                      <Link to="/user/beneficiaries" onClick={closeMenu}>Beneficiaries</Link>
                     </li>
                     <li>
                       <button onClick={logout}>Logout</button>

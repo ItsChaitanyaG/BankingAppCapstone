@@ -112,7 +112,7 @@ const KYC = () => {
             <fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
               <legend className="fieldset-legend">Pending verification</legend>
               <p>
-                Submitted On: {user.kyc.submittedAt} <br />
+                Submitted On: {new Date(user.kyc.submittedAt).toLocaleString()} <br />
                 Document Type: {user.kyc.doc_type} <br />
                 Document Number: {user.kyc.doc_no} <br />[ Waiting for Admin Verification
                 ]
@@ -137,7 +137,7 @@ const KYC = () => {
             <fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
               <legend className="fieldset-legend">Verified</legend>
               <p>
-                Verified On: {user.kyc.updatedAt} <br />
+                Verified On: {new Date(user.kyc.updatedAt).toLocaleString()} <br />
                 Document Type: {user.kyc.doc_type} <br />
                 Document Number: {user.kyc.doc_no} <br />[ Verified by Admin ]
               </p>
