@@ -15,6 +15,9 @@ import { upload } from "../middlewares/multer.middleware.js";
 
 const router = Router();
 
+//smart insight
+router.route("/smart-insight").get(verifyJWT, smartInsight);
+
 //profile
 router.route("/profile").get(verifyJWT, getProfile);
 router.route("/profile/update").put(verifyJWT, updateProfile);

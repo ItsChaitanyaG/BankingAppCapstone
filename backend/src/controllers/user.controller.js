@@ -4,6 +4,67 @@ import AsyncHandler from "../utils/AsyncHandler.js";
 import { prisma } from "../lib/prisma.js";
 import uploadToCloudinary from "../utils/Cloudinary.js";
 import { hashPassword, comparePassword } from "../utils/Password.util.js";
+import {groq, prompt} from "../services/grok.service.js";
+
+
+//Smart Insight
+
+const genInsight = async(transactions) => {
+  try {
+    const transactionText = transactions
+      .map(
+        (t, i) =>
+          `${i + 1}. ₹${t.amount} | ${t.remark || "No remark"} | ${new Date(t.createdAt).toLocaleDateString()}`
+      )
+      .join("\n");
+
+    const result = await groq.chat.completions.create({
+      model: "llama-3.1-8b-instant",
+      messages: [
+          { role: 'system', content: "You are NeoBank's AI financial assistant. Give concise, accurate banking insights." },
+          { role: 'user', content: `${transactionText}\n${prompt}` }
+      ]
+    })
+
+    const response = result.choices[0].message.content;
+
+    if(!response) {
+      throw new ApiError(500, "Failed to generate insight");
+    }
+    return response;
+  } catch (error) {
+    throw new ApiError(500, "Failed to generate insight");
+  }
+}
+
+const smartInsight = AsyncHandler(async (req, res) => {
+  const { accountId } = req.body;
+
+  if(!accountId) {
+    throw new ApiError(400, "accountId is required");
+  }
+
+  const transactions = await prisma.transaction.findMany({
+    where: {
+      OR: [
+        { sender_id: accountId },
+        { receiver_id: accountId },
+      ],
+    }
+  });
+
+  if (!transactions.length) {
+    throw new ApiError(
+      404,
+      "No transactions found."
+    );
+  }
+
+  const result = await genInsight(transactions);
+
+  res.status(200)
+    .json(new ApiResponse(200, result, "Smart insight generated successfully"));
+})
 
 //profile
 const getProfile = AsyncHandler(async (req, res) => {
@@ -46,8 +107,8 @@ const getProfile = AsyncHandler(async (req, res) => {
   return res.status(200).json(new ApiResponse(200, user, "success"));
 });
 
-const updateProfile = AsyncHandler(async(req, res) => {
-  const {name, currentPassword, newPassword, confirmPassword} = req.body;
+const updateProfile = AsyncHandler(async (req, res) => {
+  const { name, currentPassword, newPassword, confirmPassword } = req.body;
 
   const user = await prisma.user.findUnique({
     where: {
@@ -55,22 +116,22 @@ const updateProfile = AsyncHandler(async(req, res) => {
     }
   });
 
-  if((newPassword || confirmPassword) && (newPassword !== confirmPassword)) {
+  if ((newPassword || confirmPassword) && (newPassword !== confirmPassword)) {
     throw new ApiError(400, "Confirm Password should be same as new Password");
   }
 
   if (!name && !newPassword) {
     throw new ApiError(
-        400,
-        "Nothing to update"
+      400,
+      "Nothing to update"
     );
   }
 
   const updateData = {};
 
   if (name) {
-    
-    if(name === user.name){
+
+    if (name === user.name) {
       throw new ApiError(400, "Name cannot be same as earlier");
     }
 
@@ -81,7 +142,7 @@ const updateProfile = AsyncHandler(async(req, res) => {
   if (newPassword) {
     const verifyPassword = await comparePassword(currentPassword, user.password);
 
-    if(!verifyPassword) {
+    if (!verifyPassword) {
       throw new ApiError(400, "Current password is wrong");
     }
 
@@ -92,13 +153,13 @@ const updateProfile = AsyncHandler(async(req, res) => {
     where: {
       id: user.id
     },
-    data: updateData 
+    data: updateData
   });
 
   return res.status(200)
-  .json(new ApiResponse(200, null, "Profile updated successfully"));
-  
-})
+    .json(new ApiResponse(200, null, "Profile updated successfully"));
+
+});
 
 //kyc
 const addKyc = async (userId, doc_type, doc_no, document) => {
@@ -447,4 +508,4 @@ const transactionHistory = AsyncHandler(async (req, res) => {
     .json(new ApiResponse(200, transactions, "Transactions fetched successfully"));
 })
 
-export { getProfile, updateProfile, kycRequest, addAccount, getBeneficiaries, addBeneficiary, transferMoney, transactionHistory };
+export { smartInsight, getProfile, updateProfile, kycRequest, addAccount, getBeneficiaries, addBeneficiary, transferMoney, transactionHistory };
