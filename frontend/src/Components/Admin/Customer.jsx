@@ -6,7 +6,19 @@ import { useNavigate } from "react-router-dom";
 const Customer = () => {
   const [customers, setCustomers] = useState([]);
   const [selectedCustomer, setSelectedCustomer] = useState(null);
+  const [searchBy, setSearchBy] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
+
+  const filteredCustomers = customers.filter((customer) => {
+    if (searchBy === "accountNumber") {
+      return customer.account[0]?.acc_no?.includes(searchTerm) || customer.account[1]?.acc_no?.includes(searchTerm);
+    } else if (searchBy === "email") {
+      return customer.email?.includes(searchTerm);
+    }
+    return customers;
+  });
+
 
   useEffect(() => {
     const getCustomers = async () => {
@@ -39,11 +51,10 @@ const Customer = () => {
 
         <div className="flex items-center gap-5 my-10">
           <fieldset className="fieldset">
-            <select defaultValue="Pick a browser" className="select">
+            <select value={searchBy} className="select" onChange={(e) => setSearchBy(e.target.value)}>
               <option disabled={true}>Search by</option>
-              <option>Account Number</option>
-              <option>Name</option>
-              <option>Email</option>
+              <option value="accountNumber">Account Number</option>
+              <option value="email">Email</option>
             </select>
           </fieldset>
 
@@ -64,7 +75,7 @@ const Customer = () => {
                 <path d="m21 21-4.3-4.3"></path>
               </g>
             </svg>
-            <input type="search" required placeholder="Search" />
+            <input type="search" required placeholder="Search" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
           </label>
         </div>
 
@@ -82,7 +93,7 @@ const Customer = () => {
                 </tr>
               </thead>
               <tbody>
-                {customers.map((c) => {
+                {filteredCustomers.map((c) => {
                   return (
                     <tr key={c.id}>
                       {/* <th>
@@ -93,7 +104,7 @@ const Customer = () => {
                       <td>
                         <div className="flex items-center gap-3">
                           {c.id}
-                          
+
                         </div>
                       </td>
                       <td>
@@ -142,7 +153,7 @@ const Customer = () => {
                   2. Account Number: {selectedCustomer?.account[1]?.acc_no || "-"} <br />
                   2. Balance: {selectedCustomer?.account[1]?.balance || "-"}<br />
                   KYC Status: {selectedCustomer?.kyc?.status} <br />
-                  Created Date:  <br />
+                  Created Date: {new Date(selectedCustomer?.createdAt).toLocaleString()} <br />
                 </p>
               </div>
             </dialog>

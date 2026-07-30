@@ -9,6 +9,7 @@ import {
   addBeneficiary,
   transferMoney,
   transactionHistory,
+  smartInsight
 } from "../controllers/user.controller.js";
 import checkKycVerified from "../middlewares/kyc.middleware.js";
 import { upload } from "../middlewares/multer.middleware.js";
@@ -16,7 +17,7 @@ import { upload } from "../middlewares/multer.middleware.js";
 const router = Router();
 
 //smart insight
-router.route("/smart-insight").get(verifyJWT, smartInsight);
+router.route("/smart-insight").post(verifyJWT, smartInsight);
 
 //profile
 router.route("/profile").get(verifyJWT, getProfile);

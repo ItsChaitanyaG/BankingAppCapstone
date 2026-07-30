@@ -5,7 +5,10 @@ import { Link, useNavigate } from "react-router-dom";
 
 const KycRequests = () => {
   const [kyc, setKyc] = useState([]);
+  const [statusFilter, setStatusFilter] = useState("ALL");
   const navigate = useNavigate();
+
+  const filteredKyc = kyc.filter((k) => statusFilter === "ALL" ? k : k.status === statusFilter);
 
   useEffect(() => {
     const getAllKyc = async () => {
@@ -33,24 +36,27 @@ const KycRequests = () => {
 
         <div className="flex justify-center m-15">
           <form className="filter">
-            <input className="btn btn-square" type="reset" value="×" />
+            <input className="btn btn-square" type="reset" value="×" onClick={() =>setStatusFilter("ALL")} />
             <input
               className="btn"
               type="radio"
-              name="frameworks"
+              name="status"
               aria-label="Pending"
+              onChange={() => setStatusFilter("PENDING")}
             />
             <input
               className="btn"
               type="radio"
-              name="frameworks"
+              name="status"
               aria-label="Approved"
+              onChange={() => setStatusFilter("VERIFIED")}
             />
             <input
               className="btn"
               type="radio"
-              name="frameworks"
+              name="status"
               aria-label="Rejected"
+              onChange={() => setStatusFilter("REJECTED")}
             />
           </form>
         </div>
@@ -70,7 +76,7 @@ const KycRequests = () => {
               <tbody>
                 {/* row 1 */}
 
-                {kyc.map((k) => (
+                {filteredKyc.map((k) => (
                   <tr key={k.id}>
                     <th>{k.id}</th>
                     <td>{k.user.name}</td>

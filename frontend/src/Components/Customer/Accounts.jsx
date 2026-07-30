@@ -98,6 +98,7 @@ const Accounts = () => {
           </div>
 
           <div className="grid gap-6">
+            <legend>Note: Only two accounts can be created per customer reguardless of account type.</legend>
             {user.account?.map((account) => (
               <div key={account.id} className="card bg-base-100 shadow-xl">
                 <div className="card-body">

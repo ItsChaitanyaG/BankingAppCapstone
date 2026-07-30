@@ -9,14 +9,20 @@ import {groq, prompt} from "../services/grok.service.js";
 
 //Smart Insight
 
-const genInsight = async(transactions) => {
+const genInsight = async(transactions, accountId) => {
   try {
     const transactionText = transactions
       .map(
-        (t, i) =>
-          `${i + 1}. ₹${t.amount} | ${t.remark || "No remark"} | ${new Date(t.createdAt).toLocaleDateString()}`
-      )
+        (t, i) => {
+          const type = t.sender_id === accountId ? "Expense" : "Income";
+          return `Transaction ${i + 1}
+          Type: ${type}
+          Amount: ₹${t.amount}
+          Remark: ${t.remark || "None"}
+          Date: ${new Date(t.createdAt).toLocaleDateString()}`;
+        })
       .join("\n");
+
 
     const result = await groq.chat.completions.create({
       model: "llama-3.1-8b-instant",
@@ -60,7 +66,7 @@ const smartInsight = AsyncHandler(async (req, res) => {
     );
   }
 
-  const result = await genInsight(transactions);
+  const result = await genInsight(transactions, accountId);
 
   res.status(200)
     .json(new ApiResponse(200, result, "Smart insight generated successfully"));

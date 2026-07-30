@@ -87,16 +87,20 @@ const TransactionHistory = () => {
                 </tr>
               </thead>
               <tbody>
-                {filteredTransactions.map((t) => (
-
-                  <tr key={t.id}>
-                    <th>{ t.id }</th>
-                    <td>{new Date(t.createdAt).toLocaleString()}</td>
-                    <td>{t.receiver.acc_no}</td>
-                    <td>₹{t.amount}</td>
-                    <td>{t.remark}</td>
-                  </tr>
-                ))}
+                {filteredTransactions.map((t) => {
+                  const isDebit = t.sender_id === selectedAccount.id;
+                  return (
+                    <tr key={t.id}>
+                      <th>{ t.id }</th>
+                      <td>{new Date(t.createdAt).toLocaleString()}</td>
+                      <td>{t.receiver.acc_no}</td>
+                      <td className={`font-semibold ${
+                          isDebit ? "text-red-500" : "text-green-500"
+                        }`}>{isDebit ? "-" : "+"}₹{t.amount}</td>
+                      <td>{t.remark}</td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>

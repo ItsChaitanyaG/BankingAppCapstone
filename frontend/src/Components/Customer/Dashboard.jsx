@@ -5,11 +5,24 @@ import { useState } from "react";
 import { useEffect } from "react";
 import api from "../../api/axios.js"
 import toast from 'react-hot-toast';
+import ReactMarkdown from "react-markdown";
 
 const Dashboard = () => {
   const { user, loading } = useAuth();
   const { selectedAccount } = useOutletContext();
   const [transactions, setTransactions] = useState([]);
+  const [insights, setInsights] = useState("");
+
+  const getInsights = async () => {
+    try {
+      const res = await api.post("/user/smart-insight", { accountId: selectedAccount.id });
+
+      setInsights(res.data.data);
+    } catch (error) {
+      console.error(error);
+      toast.error(error.response?.data?.message || "Failed to get insights");
+    }
+  }
 
   useEffect(() => {
 
@@ -101,6 +114,13 @@ const Dashboard = () => {
         </ul>
       </div>
 
+      <div className="m-15">
+        <h2>Smart Insights</h2>
+        <legend>Get transaction insights with AI</legend>
+        <button className="btn btn-primary m-10" onClick={getInsights}>Get Insights</button>
+        <ReactMarkdown>{insights}</ReactMarkdown>
+      </div>
+
       <div className="recent-transactions p-20">
         <h2 className="justify-self-start">Recent Transactions</h2>
         <div className="overflow-x-auto">
@@ -116,15 +136,20 @@ const Dashboard = () => {
               </tr>
             </thead>
             <tbody>
-              {transactions.slice(0, 4).map((t) => (
-                <tr key={t.id}>
-                  <th>{t.id}</th>
-                  <td>{new Date(t.createdAt).toLocaleString()}</td>
-                  <td>{t.receiver_id === selectedAccount.id ? t.sender.acc_no : t.receiver.acc_no}</td>
-                  <td>₹{t.amount}</td>
-                  <td>{t.remark}</td>
-                </tr>
-              ))}
+              {transactions.slice(0, 4).map((t) => {
+                const isDebit = t.sender_id === selectedAccount.id;
+                return (
+                  <tr key={t.id}>
+                    <th>{t.id}</th>
+                    <td>{new Date(t.createdAt).toLocaleString()}</td>
+                    <td>{t.receiver_id === selectedAccount.id ? t.sender.acc_no : t.receiver.acc_no}</td>
+                    <td className={`font-semibold ${
+                        isDebit ? "text-red-500" : "text-green-500"
+                      }`}>{isDebit ? "-" : "+"}₹{t.amount}</td>
+                    <td>{t.remark}</td>
+                  </tr>
+                )
+              })}
             </tbody>
           </table>
         </div>

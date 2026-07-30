@@ -78,6 +78,8 @@ const Beneficiaries = () => {
 
         <h1 className="justify-self-start">Beneficiaries</h1>
 
+        <legend>Note: Other beneficiaries can be added to your account. But currently, beneficiaries with account in this bank are enabled for transactions.</legend>
+
         <div>
           <div className="recent-transactions p-20">
             <h2 className="justify-self-start">Beneficiaries</h2>
