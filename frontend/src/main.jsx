@@ -22,6 +22,8 @@ import Layout2 from "./Layout2.jsx";
 import Accounts from "./Components/Customer/Accounts.jsx";
 import AccountDetail from "./Components/Customer/AccountDetail.jsx";
 import AuthProvider from "./Context/AuthProvider.jsx";
+import DepositWithdraw from "./Components/Customer/DepositWithdraw.jsx";
+
 import { Toaster } from 'react-hot-toast';
 
 const router = createBrowserRouter([
@@ -64,6 +66,10 @@ const router = createBrowserRouter([
       {
         path: "transaction-history",
         element: <TransactionHistory />,
+      },
+      {
+        path: "deposit-withdraw",
+        element: <DepositWithdraw />,
       },
       {
         path: "accounts",

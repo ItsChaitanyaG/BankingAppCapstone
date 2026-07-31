@@ -54,13 +54,13 @@ model Account {
 
 model Transaction {
   id          Int      @id @default(autoincrement())
-  sender_id   Int
-  receiver_id Int
+  sender_id   Int?
+  receiver_id Int?
   amount      Decimal
   remark      String?
   createdAt   DateTime @default(now())
-  receiver    Account  @relation("Receiver", fields: [receiver_id], references: [id])
-  sender      Account  @relation("Sender", fields: [sender_id], references: [id])
+  receiver    Account? @relation("Receiver", fields: [receiver_id], references: [id])
+  sender      Account? @relation("Sender", fields: [sender_id], references: [id])
 }
 
 model Beneficiary {

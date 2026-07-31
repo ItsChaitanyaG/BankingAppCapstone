@@ -48,8 +48,8 @@ const Transactions = () => {
               {transactions.map((t) => (
                 <tr key={t.id}>
                   <th>{ t.id }</th>
-                  <td>{t.sender.acc_no}</td>
-                  <td>{t.receiver.acc_no}</td>
+                  <td>{t.sender?.acc_no || "-"}</td>
+                  <td>{t.receiver?.acc_no || "-"}</td>
                   <td>{t.amount}</td>
                   <td>{new Date(t.createdAt).toLocaleString()}</td>
                   <td>{t.remark || "-"}</td>

@@ -5051,8 +5051,8 @@ export namespace Prisma {
 
   export type TransactionGroupByOutputType = {
     id: number
-    sender_id: number
-    receiver_id: number
+    sender_id: number | null
+    receiver_id: number | null
     amount: Decimal
     remark: string | null
     createdAt: Date
@@ -5084,8 +5084,8 @@ export namespace Prisma {
     amount?: boolean
     remark?: boolean
     createdAt?: boolean
-    receiver?: boolean | AccountDefaultArgs<ExtArgs>
-    sender?: boolean | AccountDefaultArgs<ExtArgs>
+    receiver?: boolean | Transaction$receiverArgs<ExtArgs>
+    sender?: boolean | Transaction$senderArgs<ExtArgs>
   }, ExtArgs["result"]["transaction"]>
 
   export type TransactionSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -5095,8 +5095,8 @@ export namespace Prisma {
     amount?: boolean
     remark?: boolean
     createdAt?: boolean
-    receiver?: boolean | AccountDefaultArgs<ExtArgs>
-    sender?: boolean | AccountDefaultArgs<ExtArgs>
+    receiver?: boolean | Transaction$receiverArgs<ExtArgs>
+    sender?: boolean | Transaction$senderArgs<ExtArgs>
   }, ExtArgs["result"]["transaction"]>
 
   export type TransactionSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -5106,8 +5106,8 @@ export namespace Prisma {
     amount?: boolean
     remark?: boolean
     createdAt?: boolean
-    receiver?: boolean | AccountDefaultArgs<ExtArgs>
-    sender?: boolean | AccountDefaultArgs<ExtArgs>
+    receiver?: boolean | Transaction$receiverArgs<ExtArgs>
+    sender?: boolean | Transaction$senderArgs<ExtArgs>
   }, ExtArgs["result"]["transaction"]>
 
   export type TransactionSelectScalar = {
@@ -5121,28 +5121,28 @@ export namespace Prisma {
 
   export type TransactionOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "sender_id" | "receiver_id" | "amount" | "remark" | "createdAt", ExtArgs["result"]["transaction"]>
   export type TransactionInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    receiver?: boolean | AccountDefaultArgs<ExtArgs>
-    sender?: boolean | AccountDefaultArgs<ExtArgs>
+    receiver?: boolean | Transaction$receiverArgs<ExtArgs>
+    sender?: boolean | Transaction$senderArgs<ExtArgs>
   }
   export type TransactionIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    receiver?: boolean | AccountDefaultArgs<ExtArgs>
-    sender?: boolean | AccountDefaultArgs<ExtArgs>
+    receiver?: boolean | Transaction$receiverArgs<ExtArgs>
+    sender?: boolean | Transaction$senderArgs<ExtArgs>
   }
   export type TransactionIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
-    receiver?: boolean | AccountDefaultArgs<ExtArgs>
-    sender?: boolean | AccountDefaultArgs<ExtArgs>
+    receiver?: boolean | Transaction$receiverArgs<ExtArgs>
+    sender?: boolean | Transaction$senderArgs<ExtArgs>
   }
 
   export type $TransactionPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Transaction"
     objects: {
-      receiver: Prisma.$AccountPayload<ExtArgs>
-      sender: Prisma.$AccountPayload<ExtArgs>
+      receiver: Prisma.$AccountPayload<ExtArgs> | null
+      sender: Prisma.$AccountPayload<ExtArgs> | null
     }
     scalars: $Extensions.GetPayloadResult<{
       id: number
-      sender_id: number
-      receiver_id: number
+      sender_id: number | null
+      receiver_id: number | null
       amount: Prisma.Decimal
       remark: string | null
       createdAt: Date
@@ -5540,8 +5540,8 @@ export namespace Prisma {
    */
   export interface Prisma__TransactionClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
-    receiver<T extends AccountDefaultArgs<ExtArgs> = {}>(args?: Subset<T, AccountDefaultArgs<ExtArgs>>): Prisma__AccountClient<$Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-    sender<T extends AccountDefaultArgs<ExtArgs> = {}>(args?: Subset<T, AccountDefaultArgs<ExtArgs>>): Prisma__AccountClient<$Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    receiver<T extends Transaction$receiverArgs<ExtArgs> = {}>(args?: Subset<T, Transaction$receiverArgs<ExtArgs>>): Prisma__AccountClient<$Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+    sender<T extends Transaction$senderArgs<ExtArgs> = {}>(args?: Subset<T, Transaction$senderArgs<ExtArgs>>): Prisma__AccountClient<$Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -5975,6 +5975,44 @@ export namespace Prisma {
      * Limit how many Transactions to delete.
      */
     limit?: number
+  }
+
+  /**
+   * Transaction.receiver
+   */
+  export type Transaction$receiverArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Account
+     */
+    select?: AccountSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Account
+     */
+    omit?: AccountOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AccountInclude<ExtArgs> | null
+    where?: AccountWhereInput
+  }
+
+  /**
+   * Transaction.sender
+   */
+  export type Transaction$senderArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the Account
+     */
+    select?: AccountSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the Account
+     */
+    omit?: AccountOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: AccountInclude<ExtArgs> | null
+    where?: AccountWhereInput
   }
 
   /**
@@ -7567,19 +7605,19 @@ export namespace Prisma {
     OR?: TransactionWhereInput[]
     NOT?: TransactionWhereInput | TransactionWhereInput[]
     id?: IntFilter<"Transaction"> | number
-    sender_id?: IntFilter<"Transaction"> | number
-    receiver_id?: IntFilter<"Transaction"> | number
+    sender_id?: IntNullableFilter<"Transaction"> | number | null
+    receiver_id?: IntNullableFilter<"Transaction"> | number | null
     amount?: DecimalFilter<"Transaction"> | Decimal | DecimalJsLike | number | string
     remark?: StringNullableFilter<"Transaction"> | string | null
     createdAt?: DateTimeFilter<"Transaction"> | Date | string
-    receiver?: XOR<AccountScalarRelationFilter, AccountWhereInput>
-    sender?: XOR<AccountScalarRelationFilter, AccountWhereInput>
+    receiver?: XOR<AccountNullableScalarRelationFilter, AccountWhereInput> | null
+    sender?: XOR<AccountNullableScalarRelationFilter, AccountWhereInput> | null
   }
 
   export type TransactionOrderByWithRelationInput = {
     id?: SortOrder
-    sender_id?: SortOrder
-    receiver_id?: SortOrder
+    sender_id?: SortOrderInput | SortOrder
+    receiver_id?: SortOrderInput | SortOrder
     amount?: SortOrder
     remark?: SortOrderInput | SortOrder
     createdAt?: SortOrder
@@ -7592,19 +7630,19 @@ export namespace Prisma {
     AND?: TransactionWhereInput | TransactionWhereInput[]
     OR?: TransactionWhereInput[]
     NOT?: TransactionWhereInput | TransactionWhereInput[]
-    sender_id?: IntFilter<"Transaction"> | number
-    receiver_id?: IntFilter<"Transaction"> | number
+    sender_id?: IntNullableFilter<"Transaction"> | number | null
+    receiver_id?: IntNullableFilter<"Transaction"> | number | null
     amount?: DecimalFilter<"Transaction"> | Decimal | DecimalJsLike | number | string
     remark?: StringNullableFilter<"Transaction"> | string | null
     createdAt?: DateTimeFilter<"Transaction"> | Date | string
-    receiver?: XOR<AccountScalarRelationFilter, AccountWhereInput>
-    sender?: XOR<AccountScalarRelationFilter, AccountWhereInput>
+    receiver?: XOR<AccountNullableScalarRelationFilter, AccountWhereInput> | null
+    sender?: XOR<AccountNullableScalarRelationFilter, AccountWhereInput> | null
   }, "id">
 
   export type TransactionOrderByWithAggregationInput = {
     id?: SortOrder
-    sender_id?: SortOrder
-    receiver_id?: SortOrder
+    sender_id?: SortOrderInput | SortOrder
+    receiver_id?: SortOrderInput | SortOrder
     amount?: SortOrder
     remark?: SortOrderInput | SortOrder
     createdAt?: SortOrder
@@ -7620,8 +7658,8 @@ export namespace Prisma {
     OR?: TransactionScalarWhereWithAggregatesInput[]
     NOT?: TransactionScalarWhereWithAggregatesInput | TransactionScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"Transaction"> | number
-    sender_id?: IntWithAggregatesFilter<"Transaction"> | number
-    receiver_id?: IntWithAggregatesFilter<"Transaction"> | number
+    sender_id?: IntNullableWithAggregatesFilter<"Transaction"> | number | null
+    receiver_id?: IntNullableWithAggregatesFilter<"Transaction"> | number | null
     amount?: DecimalWithAggregatesFilter<"Transaction"> | Decimal | DecimalJsLike | number | string
     remark?: StringNullableWithAggregatesFilter<"Transaction"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Transaction"> | Date | string
@@ -7913,14 +7951,14 @@ export namespace Prisma {
     amount: Decimal | DecimalJsLike | number | string
     remark?: string | null
     createdAt?: Date | string
-    receiver: AccountCreateNestedOneWithoutReceivedTransactionsInput
-    sender: AccountCreateNestedOneWithoutSentTransactionsInput
+    receiver?: AccountCreateNestedOneWithoutReceivedTransactionsInput
+    sender?: AccountCreateNestedOneWithoutSentTransactionsInput
   }
 
   export type TransactionUncheckedCreateInput = {
     id?: number
-    sender_id: number
-    receiver_id: number
+    sender_id?: number | null
+    receiver_id?: number | null
     amount: Decimal | DecimalJsLike | number | string
     remark?: string | null
     createdAt?: Date | string
@@ -7930,14 +7968,14 @@ export namespace Prisma {
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     remark?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    receiver?: AccountUpdateOneRequiredWithoutReceivedTransactionsNestedInput
-    sender?: AccountUpdateOneRequiredWithoutSentTransactionsNestedInput
+    receiver?: AccountUpdateOneWithoutReceivedTransactionsNestedInput
+    sender?: AccountUpdateOneWithoutSentTransactionsNestedInput
   }
 
   export type TransactionUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
-    sender_id?: IntFieldUpdateOperationsInput | number
-    receiver_id?: IntFieldUpdateOperationsInput | number
+    sender_id?: NullableIntFieldUpdateOperationsInput | number | null
+    receiver_id?: NullableIntFieldUpdateOperationsInput | number | null
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     remark?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -7945,8 +7983,8 @@ export namespace Prisma {
 
   export type TransactionCreateManyInput = {
     id?: number
-    sender_id: number
-    receiver_id: number
+    sender_id?: number | null
+    receiver_id?: number | null
     amount: Decimal | DecimalJsLike | number | string
     remark?: string | null
     createdAt?: Date | string
@@ -7960,8 +7998,8 @@ export namespace Prisma {
 
   export type TransactionUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
-    sender_id?: IntFieldUpdateOperationsInput | number
-    receiver_id?: IntFieldUpdateOperationsInput | number
+    sender_id?: NullableIntFieldUpdateOperationsInput | number | null
+    receiver_id?: NullableIntFieldUpdateOperationsInput | number | null
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     remark?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -8404,9 +8442,20 @@ export namespace Prisma {
     _max?: NestedEnumACCTYPEFilter<$PrismaModel>
   }
 
-  export type AccountScalarRelationFilter = {
-    is?: AccountWhereInput
-    isNot?: AccountWhereInput
+  export type IntNullableFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableFilter<$PrismaModel> | number | null
+  }
+
+  export type AccountNullableScalarRelationFilter = {
+    is?: AccountWhereInput | null
+    isNot?: AccountWhereInput | null
   }
 
   export type TransactionCountOrderByAggregateInput = {
@@ -8448,6 +8497,27 @@ export namespace Prisma {
     sender_id?: SortOrder
     receiver_id?: SortOrder
     amount?: SortOrder
+  }
+
+  export type IntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type AccountScalarRelationFilter = {
+    is?: AccountWhereInput
+    isNot?: AccountWhereInput
   }
 
   export type BeneficiaryOwner_acc_idAccount_noCompoundUniqueInput = {
@@ -8778,20 +8848,32 @@ export namespace Prisma {
     connect?: AccountWhereUniqueInput
   }
 
-  export type AccountUpdateOneRequiredWithoutReceivedTransactionsNestedInput = {
+  export type AccountUpdateOneWithoutReceivedTransactionsNestedInput = {
     create?: XOR<AccountCreateWithoutReceivedTransactionsInput, AccountUncheckedCreateWithoutReceivedTransactionsInput>
     connectOrCreate?: AccountCreateOrConnectWithoutReceivedTransactionsInput
     upsert?: AccountUpsertWithoutReceivedTransactionsInput
+    disconnect?: AccountWhereInput | boolean
+    delete?: AccountWhereInput | boolean
     connect?: AccountWhereUniqueInput
     update?: XOR<XOR<AccountUpdateToOneWithWhereWithoutReceivedTransactionsInput, AccountUpdateWithoutReceivedTransactionsInput>, AccountUncheckedUpdateWithoutReceivedTransactionsInput>
   }
 
-  export type AccountUpdateOneRequiredWithoutSentTransactionsNestedInput = {
+  export type AccountUpdateOneWithoutSentTransactionsNestedInput = {
     create?: XOR<AccountCreateWithoutSentTransactionsInput, AccountUncheckedCreateWithoutSentTransactionsInput>
     connectOrCreate?: AccountCreateOrConnectWithoutSentTransactionsInput
     upsert?: AccountUpsertWithoutSentTransactionsInput
+    disconnect?: AccountWhereInput | boolean
+    delete?: AccountWhereInput | boolean
     connect?: AccountWhereUniqueInput
     update?: XOR<XOR<AccountUpdateToOneWithWhereWithoutSentTransactionsInput, AccountUpdateWithoutSentTransactionsInput>, AccountUncheckedUpdateWithoutSentTransactionsInput>
+  }
+
+  export type NullableIntFieldUpdateOperationsInput = {
+    set?: number | null
+    increment?: number
+    decrement?: number
+    multiply?: number
+    divide?: number
   }
 
   export type AccountCreateNestedOneWithoutBeneficiariesInput = {
@@ -9039,6 +9121,33 @@ export namespace Prisma {
     _max?: NestedEnumACCTYPEFilter<$PrismaModel>
   }
 
+  export type NestedIntNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: number | IntFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListIntFieldRefInput<$PrismaModel> | null
+    lt?: number | IntFieldRefInput<$PrismaModel>
+    lte?: number | IntFieldRefInput<$PrismaModel>
+    gt?: number | IntFieldRefInput<$PrismaModel>
+    gte?: number | IntFieldRefInput<$PrismaModel>
+    not?: NestedIntNullableWithAggregatesFilter<$PrismaModel> | number | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _avg?: NestedFloatNullableFilter<$PrismaModel>
+    _sum?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedIntNullableFilter<$PrismaModel>
+    _max?: NestedIntNullableFilter<$PrismaModel>
+  }
+
+  export type NestedFloatNullableFilter<$PrismaModel = never> = {
+    equals?: number | FloatFieldRefInput<$PrismaModel> | null
+    in?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    notIn?: number[] | ListFloatFieldRefInput<$PrismaModel> | null
+    lt?: number | FloatFieldRefInput<$PrismaModel>
+    lte?: number | FloatFieldRefInput<$PrismaModel>
+    gt?: number | FloatFieldRefInput<$PrismaModel>
+    gte?: number | FloatFieldRefInput<$PrismaModel>
+    not?: NestedFloatNullableFilter<$PrismaModel> | number | null
+  }
+
   export type AccountCreateWithoutUserInput = {
     acc_no: string
     balance?: Decimal | DecimalJsLike | number | string
@@ -9268,12 +9377,12 @@ export namespace Prisma {
     amount: Decimal | DecimalJsLike | number | string
     remark?: string | null
     createdAt?: Date | string
-    sender: AccountCreateNestedOneWithoutSentTransactionsInput
+    sender?: AccountCreateNestedOneWithoutSentTransactionsInput
   }
 
   export type TransactionUncheckedCreateWithoutReceiverInput = {
     id?: number
-    sender_id: number
+    sender_id?: number | null
     amount: Decimal | DecimalJsLike | number | string
     remark?: string | null
     createdAt?: Date | string
@@ -9293,12 +9402,12 @@ export namespace Prisma {
     amount: Decimal | DecimalJsLike | number | string
     remark?: string | null
     createdAt?: Date | string
-    receiver: AccountCreateNestedOneWithoutReceivedTransactionsInput
+    receiver?: AccountCreateNestedOneWithoutReceivedTransactionsInput
   }
 
   export type TransactionUncheckedCreateWithoutSenderInput = {
     id?: number
-    receiver_id: number
+    receiver_id?: number | null
     amount: Decimal | DecimalJsLike | number | string
     remark?: string | null
     createdAt?: Date | string
@@ -9397,8 +9506,8 @@ export namespace Prisma {
     OR?: TransactionScalarWhereInput[]
     NOT?: TransactionScalarWhereInput | TransactionScalarWhereInput[]
     id?: IntFilter<"Transaction"> | number
-    sender_id?: IntFilter<"Transaction"> | number
-    receiver_id?: IntFilter<"Transaction"> | number
+    sender_id?: IntNullableFilter<"Transaction"> | number | null
+    receiver_id?: IntNullableFilter<"Transaction"> | number | null
     amount?: DecimalFilter<"Transaction"> | Decimal | DecimalJsLike | number | string
     remark?: StringNullableFilter<"Transaction"> | string | null
     createdAt?: DateTimeFilter<"Transaction"> | Date | string
@@ -9625,7 +9734,7 @@ export namespace Prisma {
 
   export type TransactionCreateManyReceiverInput = {
     id?: number
-    sender_id: number
+    sender_id?: number | null
     amount: Decimal | DecimalJsLike | number | string
     remark?: string | null
     createdAt?: Date | string
@@ -9633,7 +9742,7 @@ export namespace Prisma {
 
   export type TransactionCreateManySenderInput = {
     id?: number
-    receiver_id: number
+    receiver_id?: number | null
     amount: Decimal | DecimalJsLike | number | string
     remark?: string | null
     createdAt?: Date | string
@@ -9666,12 +9775,12 @@ export namespace Prisma {
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     remark?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    sender?: AccountUpdateOneRequiredWithoutSentTransactionsNestedInput
+    sender?: AccountUpdateOneWithoutSentTransactionsNestedInput
   }
 
   export type TransactionUncheckedUpdateWithoutReceiverInput = {
     id?: IntFieldUpdateOperationsInput | number
-    sender_id?: IntFieldUpdateOperationsInput | number
+    sender_id?: NullableIntFieldUpdateOperationsInput | number | null
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     remark?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -9679,7 +9788,7 @@ export namespace Prisma {
 
   export type TransactionUncheckedUpdateManyWithoutReceiverInput = {
     id?: IntFieldUpdateOperationsInput | number
-    sender_id?: IntFieldUpdateOperationsInput | number
+    sender_id?: NullableIntFieldUpdateOperationsInput | number | null
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     remark?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -9689,12 +9798,12 @@ export namespace Prisma {
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     remark?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
-    receiver?: AccountUpdateOneRequiredWithoutReceivedTransactionsNestedInput
+    receiver?: AccountUpdateOneWithoutReceivedTransactionsNestedInput
   }
 
   export type TransactionUncheckedUpdateWithoutSenderInput = {
     id?: IntFieldUpdateOperationsInput | number
-    receiver_id?: IntFieldUpdateOperationsInput | number
+    receiver_id?: NullableIntFieldUpdateOperationsInput | number | null
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     remark?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -9702,7 +9811,7 @@ export namespace Prisma {
 
   export type TransactionUncheckedUpdateManyWithoutSenderInput = {
     id?: IntFieldUpdateOperationsInput | number
-    receiver_id?: IntFieldUpdateOperationsInput | number
+    receiver_id?: NullableIntFieldUpdateOperationsInput | number | null
     amount?: DecimalFieldUpdateOperationsInput | Decimal | DecimalJsLike | number | string
     remark?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string

@@ -88,6 +88,9 @@ const Navbar = ({ selectedAccount, setSelectedAccount }) => {
                       </Link>
                     </li>
                     <li>
+                      <Link to="/user/deposit-withdraw" onClick={closeMenu}>Deposit/Withdraw</Link>
+                    </li>
+                    <li>
                       <Link to="/user/accounts" onClick={closeMenu}>Accounts</Link>
                     </li>
                     <li>

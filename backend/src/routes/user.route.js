@@ -9,7 +9,9 @@ import {
   addBeneficiary,
   transferMoney,
   transactionHistory,
-  smartInsight
+  smartInsight,
+  deposit,
+  withdraw
 } from "../controllers/user.controller.js";
 import checkKycVerified from "../middlewares/kyc.middleware.js";
 import { upload } from "../middlewares/multer.middleware.js";
@@ -42,6 +44,12 @@ router.route("/beneficiaries/:accountId").post(verifyJWT, checkKycVerified, addB
 //transaction
 router.route("/:senderAccId/transfer").patch(verifyJWT, checkKycVerified, transferMoney);
 router.route("/:accountId/transactions").get(verifyJWT, transactionHistory);
+
+//deposit
+router.route("/deposit").patch(verifyJWT, checkKycVerified, deposit);
+
+//withdraw
+router.route("/withdraw").patch(verifyJWT, checkKycVerified, withdraw);
 
 
 export default router;

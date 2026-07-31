@@ -34,6 +34,7 @@ const Dashboard = () => {
         const res = await api.get(`/user/${selectedAccount.id}/transactions`);
 
         setTransactions(res.data.data);
+        setInsights("");
       } catch (error) {
         toast.error(
           error.response?.data?.message || "Failed to fetch transactions"
@@ -41,6 +42,7 @@ const Dashboard = () => {
       }
     }
     getTransactions();
+
   },[selectedAccount])
 
   if (loading) {
@@ -142,7 +144,7 @@ const Dashboard = () => {
                   <tr key={t.id}>
                     <th>{t.id}</th>
                     <td>{new Date(t.createdAt).toLocaleString()}</td>
-                    <td>{t.receiver_id === selectedAccount.id ? t.sender.acc_no : t.receiver.acc_no}</td>
+                    <td>{t.receiver_id === selectedAccount.id ? t.sender?.acc_no || "-" : t.receiver?.acc_no || "-"}</td>
                     <td className={`font-semibold ${
                         isDebit ? "text-red-500" : "text-green-500"
                       }`}>{isDebit ? "-" : "+"}₹{t.amount}</td>

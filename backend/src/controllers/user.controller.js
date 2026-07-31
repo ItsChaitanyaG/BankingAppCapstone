@@ -514,4 +514,128 @@ const transactionHistory = AsyncHandler(async (req, res) => {
     .json(new ApiResponse(200, transactions, "Transactions fetched successfully"));
 })
 
-export { smartInsight, getProfile, updateProfile, kycRequest, addAccount, getBeneficiaries, addBeneficiary, transferMoney, transactionHistory };
+// Deposit and Withdraw
+
+const depositAmount = async (account, amount) => {
+  try {
+    await prisma.$transaction(async (tx) => {
+      await tx.account.update({
+        where: {
+          id: account.id,
+        },
+        data: {
+          balance: {
+            increment: amount,
+          }
+        }
+      })
+
+      await tx.transaction.create({
+        data: {
+          sender_id: null,
+          receiver_id: account.id,
+          amount: amount,
+          remark: "Deposit",
+        }
+      })
+    })
+  } catch (error) {
+    throw new ApiError(500, "Failed to deposit amount");
+  }
+};
+
+const deposit = AsyncHandler(async (req, res) => {
+  const { accountId, amount } = req.body;
+
+  const newAmount = Number(amount);
+
+  if (isNaN(newAmount) || newAmount <= 0) {
+    throw new ApiError(400, "Amount must be greater than 0");
+  }
+
+  if (newAmount > 100000) {
+    throw new ApiError(400, "Deposit limit is 100,000");
+  }
+
+  const account = await prisma.account.findFirst({
+    where: {
+      id: accountId,
+      user_id: req.user.id,
+    },
+  });
+
+  if (!account) {
+    throw new ApiError(404, "Account not found");
+  }
+
+  await depositAmount(account, newAmount);
+
+  return res.status(200)
+    .json(new ApiResponse(200, null, "Deposit successful"));
+
+});
+
+const withdrawAmount = async (account, amount) => {
+  try {
+    await prisma.$transaction(async (tx) => {
+      await tx.account.update({
+        where: {
+          id: account.id,
+        },
+        data: {
+          balance: {
+            decrement: amount,
+          }
+        }
+      });
+
+      await tx.transaction.create({
+        data: {
+          sender_id: account.id,
+          receiver_id: null,
+          amount: amount,
+          remark: "Withdrawal",
+        }
+      })
+    });
+  } catch (error) {
+    throw new ApiError(500, "Failed to withdraw amount");
+  }
+};
+
+const withdraw = AsyncHandler(async (req, res) => {
+  const { accountId, amount } = req.body;
+
+  const newAmount = Number(amount);
+
+  if (isNaN(newAmount) || newAmount <= 0) {
+    throw new ApiError(400, "Amount must be greater than 0");
+  }
+
+  if (newAmount > 100000) {
+    throw new ApiError(400, "Withdrawal limit is 100,000");
+  }
+
+  const account = await prisma.account.findFirst({
+    where: {
+      id: accountId,
+      user_id: req.user.id,
+    },
+  });
+
+  if (!account) {
+    throw new ApiError(404, "Account not found");
+  }
+
+  if (account.balance < newAmount) {
+    throw new ApiError(400, "Insufficient balance");
+  }
+
+  await withdrawAmount(account, newAmount);
+
+  return res.status(200)
+    .json(new ApiResponse(200, null, "Withdrawal successful"));
+
+})
+
+export { smartInsight, getProfile, updateProfile, kycRequest, addAccount, getBeneficiaries, addBeneficiary, transferMoney, transactionHistory, deposit, withdraw };
