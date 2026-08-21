@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useState } from "react";
-import axios from "axios";
+import api from "../../api/axios.js";
 import { useNavigate } from "react-router-dom";
 
 const Customer = () => {
@@ -23,8 +23,8 @@ const Customer = () => {
   useEffect(() => {
     const getCustomers = async () => {
       try {
-        const res = await axios.get(
-          "http://localhost:8000/api/v1/admin/customers",
+        const res = await api.get(
+          "/admin/customers",
           {
             withCredentials: true,
           },

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import axios from "axios";
+import api from "../api/axios.js";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
 
@@ -12,8 +12,8 @@ const Login = () => {
   const login = async () => {
     try {
       const res = await toast.promise(
-        axios.post(
-          "http://localhost:8000/api/v1/auth/login",
+        api.post(
+          "/auth/login",
           {
             email,
             password,

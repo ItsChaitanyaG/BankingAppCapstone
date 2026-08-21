@@ -1,4 +1,4 @@
-import axios from "axios";
+import api from "../../api/axios.js";
 import { useEffect } from "react";
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -13,7 +13,7 @@ const KycRequests = () => {
   useEffect(() => {
     const getAllKyc = async () => {
       try {
-        const res = await axios.get("http://localhost:8000/api/v1/admin/kyc", {
+        const res = await api.get("/admin/kyc", {
           withCredentials: true,
         });
 
