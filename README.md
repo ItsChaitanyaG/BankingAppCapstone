@@ -2,6 +2,10 @@
 
 A full-stack digital banking application built with the PERN ecosystem, featuring secure authentication, KYC verification, account management, beneficiary management, money transfers, AI-powered financial insights, and an administrative dashboard.
 
+Live link: https://banking-app-capstone.vercel.app/
+
+Ai is not working at the moment in live environment.
+
 ---
 
 ## Features
