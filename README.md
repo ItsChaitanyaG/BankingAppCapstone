@@ -4,8 +4,6 @@ A full-stack digital banking application built with the PERN ecosystem, featurin
 
 Live link: https://banking-app-capstone.vercel.app/
 
-Ai is not working at the moment in live environment.
-
 ---
 
 ## Features
