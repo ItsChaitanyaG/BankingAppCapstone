@@ -25,7 +25,7 @@ const genInsight = async(transactions, accountId) => {
 
 
     const result = await groq.chat.completions.create({
-      model: "llama-3.1-8b-instant",
+      model: "openai/gpt-oss-120b",
       messages: [
           { role: 'system', content: "You are NeoBank's AI financial assistant. Give concise, accurate banking insights." },
           { role: 'user', content: `${transactionText}\n${prompt}` }
