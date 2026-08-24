@@ -27,9 +27,14 @@ const generateRefreshAccessToken = async (user) => {
 
 const register = AsyncHandler(async (req, res) => {
   const { name, email, password } = req.body;
+  const emailRegexPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
   if ([name, email, password].some((field) => !field.trim())) {
     throw new ApiError(400, "All fields are required");
+  }
+
+  if (!emailRegexPattern.test(email)) {
+    throw new ApiError(400, "Entered Email is not valid...")
   }
 
   const user = await prisma.user.findUnique({
