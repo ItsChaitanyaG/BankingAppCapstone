@@ -114,7 +114,7 @@ const Customer = () => {
                           </div>
                       </td>
                       <td>
-                        {c.kyc.status}
+                        {c.kyc?.status}
                         <br />
                       </td>
                       <td>{c.email}</td>
