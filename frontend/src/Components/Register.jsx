@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import api from "../api/axios.js";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-hot-toast";
@@ -74,9 +75,9 @@ const Register = () => {
 
             <div>
               Have an account?{" "}
-              <a className="underline" href="/login">
+              <Link className="underline" to="/login">
                 Login
-              </a>
+              </Link>
             </div>
           </fieldset>
         </div>
