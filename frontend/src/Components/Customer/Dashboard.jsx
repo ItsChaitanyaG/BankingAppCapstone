@@ -59,104 +59,231 @@ const Dashboard = () => {
     return <div className="loading loading-spinner">Loading...</div>;
   }
 
-
-
   return (
-    <>
-      <div className="summery-card" data-theme="dark">
-        <div className="m-15">
-          <h1 className="justify-self-start">Welcome {user.name}</h1>
+    <div className="space-y-6 p-4 sm:p-6 lg:p-8">
+
+      {/* ==================== SUMMARY ==================== */}
+      <section className="summery-card rounded-box" data-theme="dark">
+
+        {/* Welcome */}
+        <div className="p-5 sm:p-8">
+          <h1 className="text-2xl sm:text-3xl font-bold">
+            Welcome {user.name}
+          </h1>
         </div>
 
-        <div className="quick-look my-25">
-          <h2 className="m-10">Quick Look</h2>
+        {/* Quick Look */}
+        <div className="px-5 pb-6 sm:px-8">
+          <h2 className="mb-4 text-xl font-semibold">
+            Quick Look
+          </h2>
 
-          <div className="stats stats-vertical lg:stats-horizontal shadow">
-            <div className="stat">
-              <div className="stat-title">Account Number</div>
-              <div className="stat-value">{hasAccounts? selectedAccount.acc_no : "-"}</div>
-              <div className="stat-desc"></div>
-            </div>
+          <div className="stats stats-vertical lg:stats-horizontal w-full shadow">
 
             <div className="stat">
-              <div className="stat-title">Balance</div>
-              <div className="stat-value">₹{hasAccounts ? selectedAccount.balance : "-"}</div>
-              <div className="stat-desc"></div>
+              <div className="stat-title">
+                Account Number
+              </div>
+
+              <div className="stat-value text-lg sm:text-2xl break-all">
+                {hasAccounts
+                  ? selectedAccount?.acc_no
+                  : "-"}
+              </div>
             </div>
 
-            <div className="stat">
-              <div className="stat-title">KYC Status</div>
-              <div className="stat-value">{user.kyc?.status ?? "Not Submitted"}</div>
-              <div className="stat-desc"></div>
-            </div>
 
             <div className="stat">
-              <div className="stat-title">Beneficiaries</div>
-              <div className="stat-value">{hasAccounts ? selectedAccount.beneficiaries.length : "-"}</div>
-              <div className="stat-desc"></div>
+              <div className="stat-title">
+                Balance
+              </div>
+
+              <div className="stat-value text-lg sm:text-2xl">
+                {hasAccounts
+                  ? `₹${Number(selectedAccount?.balance || 0).toLocaleString("en-IN")}`
+                  : "-"}
+              </div>
             </div>
+
+
+            <div className="stat">
+              <div className="stat-title">
+                KYC Status
+              </div>
+
+              <div className="stat-value text-lg sm:text-2xl">
+                {user.kyc?.status ?? "Not Submitted"}
+              </div>
+            </div>
+
+
+            <div className="stat">
+              <div className="stat-title">
+                Beneficiaries
+              </div>
+
+              <div className="stat-value text-lg sm:text-2xl">
+                {hasAccounts
+                  ? selectedAccount?.beneficiaries?.length ?? 0
+                  : "-"}
+              </div>
+            </div>
+
           </div>
         </div>
-      </div>
+      </section>
 
-      <div className="" data-theme="dark">
-        <ul className="menu menu-vertical lg:menu-horizontal bg-base-200 rounded-box gap-10">
-          <li>
-            <Link to="/user/transfer-money">Transfer Money</Link>
+
+      {/* ==================== QUICK ACTIONS ==================== */}
+      <section>
+        <h2 className="mb-3 text-xl font-semibold">
+          Quick Actions
+        </h2>
+
+        <ul
+          className="
+            menu
+            menu-vertical
+            sm:menu-horizontal
+            bg-base-200
+            rounded-box
+            w-full
+            gap-1
+            sm:gap-2
+          "
+        >
+          <li className="flex-1">
+            <Link to="/user/transfer-money">
+              Transfer Money
+            </Link>
           </li>
-          <li>
-            <Link to="/user/transaction-history">View Transactions</Link>
+
+          <li className="flex-1">
+            <Link to="/user/transaction-history">
+              View Transactions
+            </Link>
           </li>
-          <li>
-            <Link to="/user/beneficiaries">Add Beneficiary</Link>
+
+          <li className="flex-1">
+            <Link to="/user/beneficiaries">
+              Add Beneficiary
+            </Link>
           </li>
-          <li>
-            <Link to="/user/profile">View Profile</Link>
+
+          <li className="flex-1">
+            <Link to="/user/profile">
+              View Profile
+            </Link>
           </li>
         </ul>
-      </div>
+      </section>
 
-      <div className="m-15">
-        <h2>Smart Insights</h2>
-        <legend>Get transaction insights with AI</legend>
-        <button className="btn btn-primary m-10" onClick={getInsights}>Get Insights</button>
-        <ReactMarkdown>{insights}</ReactMarkdown>
-      </div>
 
-      <div className="recent-transactions p-20">
-        <h2 className="justify-self-start">Recent Transactions</h2>
+      {/* ==================== SMART INSIGHTS ==================== */}
+      <section className="rounded-box bg-base-200 p-5 sm:p-6">
+
+        <h2 className="text-xl sm:text-2xl font-semibold">
+          Smart Insights
+        </h2>
+
+        <p className="mt-1 text-sm opacity-70">
+          Get transaction insights with AI
+        </p>
+
+        <button
+          className="btn btn-primary mt-4"
+          onClick={getInsights}
+        >
+          Get Insights
+        </button>
+
+        {insights && (
+          <div className="prose prose-sm sm:prose mt-5 max-w-none">
+            <ReactMarkdown>
+              {insights}
+            </ReactMarkdown>
+          </div>
+        )}
+
+      </section>
+
+
+      {/* ==================== RECENT TRANSACTIONS ==================== */}
+      <section className="rounded-box bg-base-200 p-4 sm:p-6">
+
+        <h2 className="mb-4 text-xl sm:text-2xl font-semibold">
+          Recent Transactions
+        </h2>
+
         <div className="overflow-x-auto">
-          <table className="table">
-            {/* head */}
+
+          <table className="table table-zebra">
+
             <thead>
               <tr>
-                <th></th>
+                <th>ID</th>
                 <th>Date</th>
                 <th>Counterparty</th>
                 <th>Amount</th>
                 <th>Remark</th>
               </tr>
             </thead>
+
             <tbody>
+
               {transactions.slice(0, 4).map((t) => {
-                const isDebit = t.sender_id === selectedAccount.id;
+
+                const isDebit =
+                  t.sender_id === selectedAccount?.id;
+
+                const counterparty =
+                  t.receiver_id === selectedAccount?.id
+                    ? t.sender?.acc_no
+                    : t.receiver?.acc_no;
+
                 return (
                   <tr key={t.id}>
+
                     <th>{t.id}</th>
-                    <td>{new Date(t.createdAt).toLocaleString()}</td>
-                    <td>{t.receiver_id === selectedAccount.id ? t.sender?.acc_no || "-" : t.receiver?.acc_no || "-"}</td>
-                    <td className={`font-semibold ${
-                        isDebit ? "text-red-500" : "text-green-500"
-                      }`}>{isDebit ? "-" : "+"}₹{t.amount}</td>
-                    <td>{t.remark}</td>
+
+                    <td className="whitespace-nowrap">
+                      {new Date(
+                        t.createdAt
+                      ).toLocaleDateString()}
+                    </td>
+
+                    <td>
+                      {counterparty || "-"}
+                    </td>
+
+                    <td
+                      className={`font-semibold whitespace-nowrap ${
+                        isDebit
+                          ? "text-error"
+                          : "text-success"
+                      }`}
+                    >
+                      {isDebit ? "-" : "+"}
+                      ₹{Number(t.amount).toLocaleString("en-IN")}
+                    </td>
+
+                    <td>
+                      {t.remark || "-"}
+                    </td>
+
                   </tr>
-                )
+                );
               })}
+
             </tbody>
+
           </table>
+
         </div>
-      </div>
-    </>
+
+      </section>
+
+    </div>
   );
 };
 

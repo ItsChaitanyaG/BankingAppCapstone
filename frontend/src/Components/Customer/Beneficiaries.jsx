@@ -72,91 +72,188 @@ const Beneficiaries = () => {
 
 
   return (
-    <>
-      <div className="m-15">
-        <button className="btn btn-ghost mb-6 flex justify-self-start" onClick={() => navigate("/user")}>← Back</button>
+    <div className="p-4 sm:p-6 lg:p-8">
 
-        <h1 className="justify-self-start">Beneficiaries</h1>
+      {/* Back */}
+      <button
+        className="btn btn-ghost mb-4 flex self-start"
+        onClick={() => navigate("/user")}
+      >
+        ← Back
+      </button>
 
-        <legend>Note: Other beneficiaries can be added to your account. But currently, beneficiaries with account in this bank are enabled for transactions.</legend>
+      {/* Header */}
+      <div className="mb-6">
+        <h1 className="text-2xl sm:text-3xl font-bold">
+          Beneficiaries
+        </h1>
 
-        <div>
-          <div className="recent-transactions p-20">
-            <h2 className="justify-self-start">Beneficiaries</h2>
-            <div className="overflow-x-auto">
-              <table className="table">
-                {/* head */}
-                <thead>
-                  <tr>
-                    <th></th>
-                    <th>Account Number</th>
-                    <th>Beneficiary Name</th>
-                    <th>Max Limit</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {beneficiaries.map((b) => (
-                    <tr key={b.id}>
-                      <th>{b.id}</th>
-                      <td>{b.account_no}</td>
-                      <td>{b.name}</td>
-                      <td>₹{b.max_limit}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
+        <p className="mt-2 text-sm opacity-70 max-w-3xl">
+          Note: Other beneficiaries can be added to your account.
+          Currently, beneficiaries with accounts in this bank are
+          enabled for transactions.
+        </p>
+      </div>
+
+
+      {/* Beneficiary List */}
+      <section className="rounded-box bg-base-200 p-4 sm:p-6">
+
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
+          <h2 className="text-xl font-semibold">
+            Beneficiaries
+          </h2>
+
+          <button
+            className="btn btn-primary w-full sm:w-auto"
+            onClick={() =>
+              document.getElementById("my_modal_5").showModal()
+            }
+          >
+            + Add Beneficiary
+          </button>
         </div>
 
-        {/* Open the modal using document.getElementById('ID').showModal() method */}
-        <button
-          className="btn"
-          onClick={() => document.getElementById("my_modal_5").showModal()}
-        >
-          Add Beneficiary
-        </button>
-        <dialog id="my_modal_5" className="modal modal-bottom sm:modal-middle">
-          <div className="modal-box">
-            <h3 className="font-bold text-lg">Add Beneficiary</h3>
-            <fieldset className="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4 m-5 justify-self-center">
 
-              <label className="label">Name</label>
-              <input type="text"  className="input" placeholder="Name" value={name} onChange={(e) => setName(e.target.value)} />
+        {/* Table */}
+        <div className="overflow-x-auto">
+          <table className="table table-zebra">
 
-              <label className="label">Bank Name</label>
-              <input type="text" className="input" placeholder="Name" value={bankName} onChange={(e) => setBankName(e.target.value)} />
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Account Number</th>
+                <th>Beneficiary Name</th>
+                <th>Max Limit</th>
+              </tr>
+            </thead>
 
-              <label className="label">Account Number</label>
-              <input
-                type="number"
-                className="input"
-                placeholder="Account Number"
-                value={accountNumber}
-                onChange={(e) => setAccountNumber(e.target.value)}
-              />
+            <tbody>
+              {beneficiaries.map((b) => (
+                <tr key={b.id}>
 
-              <label className="label">Max Transfer Limit</label>
-              <input
-                type="number"
-                className="input"
-                placeholder="Max Transfer Limit"
-                value={maxLimit}
-                onChange={(e) => setMaxLimit(e.target.value)}
-              />
+                  <th>{b.id}</th>
 
-              <button className="btn btn-neutral mt-4" onClick={addBeneficiary}>Add</button>
-            </fieldset>
-            <div className="modal-action flex justify-center">
-              <form method="dialog">
-                {/* if there is a button in form, it will close the modal */}
-                <button className="btn">Close</button>
-              </form>
-            </div>
+                  <td className="whitespace-nowrap">
+                    {b.account_no}
+                  </td>
+
+                  <td>
+                    {b.name}
+                  </td>
+
+                  <td className="whitespace-nowrap">
+                    ₹{Number(b.max_limit).toLocaleString("en-IN")}
+                  </td>
+
+                </tr>
+              ))}
+            </tbody>
+
+          </table>
+        </div>
+
+      </section>
+
+
+      {/* Add Beneficiary Modal */}
+      <dialog
+        id="my_modal_5"
+        className="modal modal-bottom sm:modal-middle"
+      >
+        <div className="modal-box w-full max-w-lg">
+
+          <h3 className="font-bold text-xl">
+            Add Beneficiary
+          </h3>
+
+          <p className="text-sm opacity-70 mt-1">
+            Enter the beneficiary details below.
+          </p>
+
+
+          <fieldset className="fieldset bg-base-200 border-base-300 rounded-box border p-4 mt-5">
+
+            {/* Name */}
+            <label className="label">
+              Name
+            </label>
+
+            <input
+              type="text"
+              className="input w-full"
+              placeholder="Beneficiary name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+
+
+            {/* Bank */}
+            <label className="label mt-2">
+              Bank Name
+            </label>
+
+            <input
+              type="text"
+              className="input w-full"
+              placeholder="Bank name"
+              value={bankName}
+              onChange={(e) => setBankName(e.target.value)}
+            />
+
+
+            {/* Account Number */}
+            <label className="label mt-2">
+              Account Number
+            </label>
+
+            <input
+              type="number"
+              className="input w-full"
+              placeholder="Account number"
+              value={accountNumber}
+              onChange={(e) => setAccountNumber(e.target.value)}
+            />
+
+
+            {/* Max Limit */}
+            <label className="label mt-2">
+              Max Transfer Limit
+            </label>
+
+            <input
+              type="number"
+              className="input w-full"
+              placeholder="Maximum transfer limit"
+              value={maxLimit}
+              onChange={(e) => setMaxLimit(e.target.value)}
+            />
+
+          </fieldset>
+
+
+          {/* Modal buttons */}
+          <div className="modal-action flex-col-reverse sm:flex-row">
+
+            <form method="dialog">
+              <button className="btn w-full sm:w-auto">
+                Close
+              </button>
+            </form>
+
+            <button
+              className="btn btn-primary w-full sm:w-auto"
+              onClick={addBeneficiary}
+            >
+              Add Beneficiary
+            </button>
+
           </div>
-        </dialog>
-      </div>
-    </>
+
+        </div>
+      </dialog>
+
+    </div>
   );
 };
 
