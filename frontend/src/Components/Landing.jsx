@@ -52,7 +52,7 @@ const Landing = () => {
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 my-10">
             <div className="card bg-base-100 shadow-xl">
               <div className="card-body">
-                <div className="text-4xl">🔒</div>
+
                 <h2 className="card-title">Secure Authentication</h2>
                 <p>
                   JWT-based authentication with encrypted passwords to keep your
@@ -63,7 +63,7 @@ const Landing = () => {
 
             <div className="card bg-base-100 shadow-xl">
               <div className="card-body">
-                <div className="text-4xl">📄</div>
+
                 <h2 className="card-title">Digital KYC</h2>
                 <p>
                   Upload your documents online and get verified quickly without
@@ -74,7 +74,7 @@ const Landing = () => {
 
             <div className="card bg-base-100 shadow-xl">
               <div className="card-body">
-                <div className="text-4xl">💳</div>
+
                 <h2 className="card-title">Account Management</h2>
                 <p>
                   Open Savings or Current accounts and monitor balances in real
@@ -85,7 +85,7 @@ const Landing = () => {
 
             <div className="card bg-base-100 shadow-xl">
               <div className="card-body">
-                <div className="text-4xl">👥</div>
+
                 <h2 className="card-title">Beneficiaries</h2>
                 <p>
                   Add trusted beneficiaries securely and manage transfer limits
@@ -106,7 +106,7 @@ const Landing = () => {
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 my-10">
             <div>
-              <div className="text-5xl mb-3">🛡️</div>
+
               <h3 className="font-semibold text-xl">Reliable Security</h3>
               <p className="text-base-content/70 mt-2">
                 Industry-standard authentication and secure banking operations.
@@ -114,7 +114,7 @@ const Landing = () => {
             </div>
 
             <div>
-              <div className="text-5xl mb-3">⚡</div>
+
               <h3 className="font-semibold text-xl">Fast Verification</h3>
               <p className="text-base-content/70 mt-2">
                 Digital KYC processing for quicker onboarding.
@@ -122,7 +122,7 @@ const Landing = () => {
             </div>
 
             <div>
-              <div className="text-5xl mb-3">📱</div>
+
               <h3 className="font-semibold text-xl">Simple Interface</h3>
               <p className="text-base-content/70 mt-2">
                 Clean and responsive design for desktop and mobile devices.
@@ -130,7 +130,7 @@ const Landing = () => {
             </div>
 
             <div>
-              <div className="text-5xl mb-3">🏦</div>
+
               <h3 className="font-semibold text-xl">Complete Banking</h3>
               <p className="text-base-content/70 mt-2">
                 Manage accounts, transfers, and beneficiaries from one
