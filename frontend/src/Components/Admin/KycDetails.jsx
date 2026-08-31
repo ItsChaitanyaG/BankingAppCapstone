@@ -28,8 +28,8 @@ const KycDetails = () => {
 
   const approveKyc = async () => {
     try {
-      await axios.patch(
-        `http://localhost:8000/api/v1/admin/kyc/${kyc.id}/verify`,
+      await api.patch(
+        `/admin/kyc/${kyc.id}/verify`,
         {},
         {
           withCredentials: true,
@@ -47,8 +47,8 @@ const KycDetails = () => {
 
   const rejectKyc = async () => {
     try {
-      await axios.patch(
-        `http://localhost:8000/api/v1/admin/kyc/${kyc.id}/reject`,
+      await api.patch(
+        `/admin/kyc/${kyc.id}/reject`,
         {},
         {
           withCredentials: true,
